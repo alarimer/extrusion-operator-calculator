@@ -56,8 +56,6 @@ class MainActivity : ComponentActivity() {
 fun SawSettingScreen(
     modifier: Modifier = Modifier
 ) {
-    var currentExpanded by remember { mutableStateOf(false) }
-    var desiredExpanded by remember { mutableStateOf(false) }
     val menuItemDataMap = mapOf(
         "0" to 0.0,
         "1/8" to 0.125,
@@ -95,19 +93,20 @@ fun SawSettingScreen(
             Box(
                 modifier = modifier
             ) {
-                IconButton(onClick = { currentExpanded = !currentExpanded }) {
+                var isExpanded by remember { mutableStateOf(false) }
+                IconButton(onClick = { isExpanded = !isExpanded }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "Select fraction")
                 }
                 DropdownMenu(
-                    expanded = currentExpanded,
-                    onDismissRequest = { currentExpanded = false }
+                    expanded = isExpanded,
+                    onDismissRequest = { isExpanded = false }
                 ) {
                     menuItemDataMap.forEach { option ->
                         DropdownMenuItem(
                             text = { Text(option.key) },
                             onClick = {
                                 currentFraction = option.key
-                                currentExpanded = false
+                                isExpanded = false
                                 currentLength = (currentLength.toDouble().toInt() + option.value).toString()
                             }
                         )
@@ -136,19 +135,20 @@ fun SawSettingScreen(
             Box(
                 modifier = modifier
             ) {
-                IconButton(onClick = { desiredExpanded = !desiredExpanded }) {
+                var isExpanded by remember { mutableStateOf(false) }
+                IconButton(onClick = { isExpanded = !isExpanded }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "Select fraction")
                 }
                 DropdownMenu(
-                    expanded = desiredExpanded,
-                    onDismissRequest = { desiredExpanded = false }
+                    expanded = isExpanded,
+                    onDismissRequest = { isExpanded = false }
                 ) {
                     menuItemDataMap.forEach { option ->
                         DropdownMenuItem(
                             text = { Text(option.key) },
                             onClick = {
                                 desiredFraction = option.key
-                                desiredExpanded = false
+                                isExpanded = false
                                 desiredLength = (desiredLength.toDouble().toInt() + option.value).toString()
                             }
                         )
