@@ -66,11 +66,11 @@ fun SawSettingScreen(
         "3/4" to .75,
         "7/8" to 0.875
     )
-    var currentLength by remember { mutableStateOf("") }
+    var currentLength by remember { mutableStateOf("252") }
     var currentFraction: String by remember { mutableStateOf("0")}
-    var desiredLength by remember { mutableStateOf("") }
+    var desiredLength by remember { mutableStateOf("252") }
     var desiredFraction: String by remember { mutableStateOf("0")}
-    var currentSetting by remember { mutableStateOf("") }
+    var currentSetting by remember { mutableStateOf("252") }
     var desiredSetting by remember { mutableStateOf("0") }
     Column(
         verticalArrangement = Arrangement.Center
