@@ -24,11 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.data.DataSource
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
@@ -54,8 +56,8 @@ fun RackTimeScreen(
         TextField(
             value = pullerSpeed,
             onValueChange = { pullerSpeed = it },
-            label = { Text("Puller Speed") },
-            placeholder = { Text("m/min") },
+            label = { Text(stringResource(R.string.puller_speed)) },
+            placeholder = { Text(stringResource(R.string.meters_per_minute)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
@@ -71,8 +73,8 @@ fun RackTimeScreen(
             TextField(
                 value = currentLength,
                 onValueChange = { currentLength = it },
-                label = { Text("Current Length") },
-                placeholder = { Text("inches") },
+                label = { Text(stringResource(R.string.current_length)) },
+                placeholder = { Text(stringResource(R.string.inches)) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -84,7 +86,7 @@ fun RackTimeScreen(
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 IconButton(onClick = { isExpanded = !isExpanded }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Select fraction")
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.select_fraction))
                 }
                 DropdownMenu(
                     expanded = isExpanded,
@@ -110,8 +112,8 @@ fun RackTimeScreen(
         TextField(
             value = piecesPerRack,
             onValueChange = { piecesPerRack = it },
-            label = { Text("Pieces per Rack") },
-            placeholder = { Text("number") },
+            label = { Text(stringResource(R.string.pieces_per_rack)) },
+            placeholder = { Text(stringResource(R.string.number)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
@@ -130,7 +132,7 @@ fun RackTimeScreen(
                 )
             }
         ) {
-            Text("Calculate")
+            Text(stringResource(R.string.calculate))
         }
         Spacer(
             modifier = Modifier.padding(4.dp)

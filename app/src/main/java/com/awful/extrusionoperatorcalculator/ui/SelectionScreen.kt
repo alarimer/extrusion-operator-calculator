@@ -10,10 +10,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
 
@@ -33,7 +35,7 @@ fun SelectionScreen(
         Button(
             onClick = { navController.navigate(SawSettingScreen) }
         ) {
-            Text("Saw Setting")
+            Text(stringResource(R.string.saw_setting))
         }
         Spacer(
             modifier = Modifier.padding(4.dp)
@@ -41,7 +43,7 @@ fun SelectionScreen(
         Button(
             onClick = { navController.navigate(RackTimeScreen) }
         ) {
-            Text("Rack Time")
+            Text(stringResource(R.string.rack_time))
         }
     }
 }

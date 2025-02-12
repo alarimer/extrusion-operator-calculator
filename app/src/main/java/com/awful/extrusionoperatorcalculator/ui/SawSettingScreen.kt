@@ -24,11 +24,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.data.DataSource
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
@@ -57,8 +59,8 @@ fun SawSettingScreen(
             TextField(
                 value = currentLength,
                 onValueChange = { currentLength = it },
-                label = { Text("Current Length") },
-                placeholder = { Text("inches") },
+                label = { Text(stringResource(R.string.current_length)) },
+                placeholder = { Text(stringResource(R.string.inches)) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -70,7 +72,7 @@ fun SawSettingScreen(
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 IconButton(onClick = { isExpanded = !isExpanded }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Select fraction")
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.select_fraction))
                 }
                 DropdownMenu(
                     expanded = isExpanded,
@@ -99,8 +101,8 @@ fun SawSettingScreen(
             TextField(
                 value = desiredLength,
                 onValueChange = { desiredLength = it },
-                label = { Text("Desired Length") },
-                placeholder = { Text("inches") },
+                label = { Text(stringResource(R.string.desired_length)) },
+                placeholder = { Text(stringResource(R.string.inches)) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -112,7 +114,7 @@ fun SawSettingScreen(
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 IconButton(onClick = { isExpanded = !isExpanded }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Select fraction")
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.select_fraction))
                 }
                 DropdownMenu(
                     expanded = isExpanded,
@@ -138,8 +140,8 @@ fun SawSettingScreen(
         TextField(
             value = currentSetting,
             onValueChange = { currentSetting = it },
-            label = { Text("Current Setting") },
-            placeholder = { Text("inches") },
+            label = { Text(stringResource(R.string.current_setting)) },
+            placeholder = { Text(stringResource(R.string.inches)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
@@ -158,7 +160,7 @@ fun SawSettingScreen(
                 )
             }
         ) {
-            Text("Calculate")
+            Text(stringResource(R.string.calculate))
         }
         Spacer(
             modifier = Modifier.padding(4.dp)
