@@ -52,11 +52,13 @@ fun EocApp(
         }
         composable<SawSettingScreen> {
             SawSettingScreen(
+                onBack = { navController.navigateUp() },
                 modifier = modifier
             )
         }
         composable<RackTimeScreen> {
             RackTimeScreen(
+                onBack = { navController.navigateUp() },
                 modifier =  modifier
             )
         }

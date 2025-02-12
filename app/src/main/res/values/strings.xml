@@ -2,6 +2,7 @@
     <string name="app_name">Extrusion Operator Calculator</string>
     <string name="saw_setting">Saw Setting</string>
     <string name="rack_time">Rack Time</string>
+    <string name="back_button">Back to Tool Selection</string>
     <string name="calculate">Calculate</string>
     <string name="inches">inches</string>
     <string name="meters_per_minute">m/min</string>

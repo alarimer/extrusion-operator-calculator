@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -35,12 +37,14 @@ import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.data.DataSource
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
+import kotlin.math.round
 
 @Serializable
 object SawSettingScreen
 
 @Composable
 fun SawSettingScreen(
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var currentLength by remember { mutableStateOf("252") }
@@ -53,12 +57,24 @@ fun SawSettingScreen(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            stringResource(R.string.saw_setting),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back_button)
+                )
+            }
+            Spacer(modifier = Modifier.padding(24.dp))
+            Text(
+                stringResource(R.string.saw_setting),
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
         Spacer(
             modifier = Modifier.padding(16.dp)
         )
@@ -192,7 +208,7 @@ fun calculateDesiredSetting(
     desiredLength: Double,
     currentSetting: Double
 ): String {
-    return (kotlin.math.round(currentSetting * desiredLength / currentLength * 8) / 8).toString()
+    return (round(currentSetting * desiredLength / currentLength * 8) / 8).toString()
 }
 
 @Preview(showBackground = true)
@@ -200,6 +216,7 @@ fun calculateDesiredSetting(
 fun SawSettingScreenPreview() {
     ExtrusionOperatorCalculatorTheme {
         SawSettingScreen(
+            onBack = {},
             modifier = Modifier
         )
     }

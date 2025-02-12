@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -42,6 +44,7 @@ object RackTimeScreen
 
 @Composable
 fun RackTimeScreen(
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var pullerSpeed by remember { mutableStateOf("2.5") }
@@ -53,12 +56,24 @@ fun RackTimeScreen(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            stringResource(R.string.rack_time),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back_button)
+                )
+            }
+            Spacer(modifier = Modifier.padding(24.dp))
+            Text(
+                stringResource(R.string.rack_time),
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
         Spacer(
             modifier = Modifier.padding(16.dp)
         )
@@ -174,6 +189,7 @@ fun calculateRackTime(
 fun RackTimeScreenPreview() {
     ExtrusionOperatorCalculatorTheme {
         RackTimeScreen(
+            onBack = {},
             modifier = Modifier
         )
     }
