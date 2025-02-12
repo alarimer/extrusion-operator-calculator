@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.awful.extrusionoperatorcalculator.ui.RackTimeScreen
 import com.awful.extrusionoperatorcalculator.ui.SawSettingScreen
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 
@@ -39,7 +40,7 @@ fun EocApp(
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = SawSettingScreen,
+        startDestination = RackTimeScreen,
         modifier = modifier
     ) {
         composable<SawSettingScreen> {
@@ -47,13 +48,17 @@ fun EocApp(
                 modifier = modifier
             )
         }
+        composable<RackTimeScreen> {
+            RackTimeScreen(
+                modifier =  modifier
+            )
+        }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun SawSettingScreenPreview() {
+fun EocAppPreview() {
     ExtrusionOperatorCalculatorTheme {
         EocApp(
             modifier = Modifier.padding()

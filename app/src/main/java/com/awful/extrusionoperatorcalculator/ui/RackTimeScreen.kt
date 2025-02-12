@@ -31,12 +31,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration.Companion.minutes
 
 @Serializable
-object SawSettingScreen
+object RackTimeScreen
 
 @Composable
-fun SawSettingScreen(
+fun RackTimeScreen(
     modifier: Modifier = Modifier
 ) {
     val menuItemDataMap = mapOf(
@@ -49,17 +50,30 @@ fun SawSettingScreen(
         "3/4" to .75,
         "7/8" to 0.875
     )
+    var pullerSpeed by remember { mutableStateOf("2.5") }
     var currentLength by remember { mutableStateOf("252") }
     var currentFraction: String by remember { mutableStateOf("0") }
-    var desiredLength by remember { mutableStateOf("252") }
-    var desiredFraction: String by remember { mutableStateOf("0") }
-    var currentSetting by remember { mutableStateOf("252") }
-    var desiredSetting by remember { mutableStateOf("0") }
+    var piecesPerRack by remember { mutableStateOf("60") }
+    var rackTime by remember { mutableStateOf("0") }
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
-        // current length
+        // puller speed
+        TextField(
+            value = pullerSpeed,
+            onValueChange = { pullerSpeed = it },
+            label = { Text("Puller Speed") },
+            placeholder = { Text("m/min") },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            )
+        )
+        Spacer(
+            modifier = Modifier.padding(4.dp)
+        )
+        // profile length
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -101,54 +115,12 @@ fun SawSettingScreen(
         Spacer(
             modifier = Modifier.padding(4.dp)
         )
-        // desired length
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(
-                value = desiredLength,
-                onValueChange = { desiredLength = it },
-                label = { Text("Desired Length") },
-                placeholder = { Text("inches") },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
-                )
-            )
-            Text(desiredFraction, modifier = Modifier.padding(16.dp))
-            Box(
-                modifier = modifier
-            ) {
-                var isExpanded by remember { mutableStateOf(false) }
-                IconButton(onClick = { isExpanded = !isExpanded }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Select fraction")
-                }
-                DropdownMenu(
-                    expanded = isExpanded,
-                    onDismissRequest = { isExpanded = false }
-                ) {
-                    menuItemDataMap.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option.key) },
-                            onClick = {
-                                desiredFraction = option.key
-                                isExpanded = false
-                                desiredLength = (desiredLength.toDouble().toInt() + option.value).toString()
-                            }
-                        )
-                    }
-                }
-            }
-        }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // current setting
+        // pieces per rack
         TextField(
-            value = currentSetting,
-            onValueChange = { currentSetting = it },
-            label = { Text("Current Setting") },
-            placeholder = { Text("inches") },
+            value = piecesPerRack,
+            onValueChange = { piecesPerRack = it },
+            label = { Text("Pieces per Rack") },
+            placeholder = { Text("number") },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
@@ -160,10 +132,10 @@ fun SawSettingScreen(
         // calculate button
         Button(
             onClick = {
-                desiredSetting = calculateDesiredSetting(
+                rackTime = calculateRackTime(
+                    pullerSpeed.toDouble(),
                     currentLength.toDouble(),
-                    desiredLength.toDouble(),
-                    currentSetting.toDouble()
+                    piecesPerRack.toDouble()
                 )
             }
         ) {
@@ -172,25 +144,27 @@ fun SawSettingScreen(
         Spacer(
             modifier = Modifier.padding(4.dp)
         )
-        // desired setting
-        Text("New Setting: $desiredSetting", fontWeight = FontWeight.Bold)
+        // rack time
+        Text("Rack time: $rackTime", fontWeight = FontWeight.Bold)
     }
 }
 
-// rounds the result to the nearest 1/8 inch
-fun calculateDesiredSetting(
-    currentLength: Double,
-    desiredLength: Double,
-    currentSetting: Double
+fun calculateRackTime(
+    pullerSpeed: Double,
+    profileLength: Double,
+    piecesPerRack: Double
 ): String {
-    return (kotlin.math.round(currentSetting * desiredLength / currentLength * 8) / 8).toString()
+    val minutesPerRack = (piecesPerRack * profileLength * .0254 / pullerSpeed).minutes
+    return minutesPerRack.toComponents {
+            hours, minutes, _, _ -> "$hours:$minutes (h:mm)"
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun SawSettingScreenPreview() {
+fun RackTimeScreenPreview() {
     ExtrusionOperatorCalculatorTheme {
-        SawSettingScreen(
+        RackTimeScreen(
             modifier = Modifier.padding()
         )
     }
