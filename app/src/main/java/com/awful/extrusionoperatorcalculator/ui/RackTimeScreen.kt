@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.awful.extrusionoperatorcalculator.data.DataSource
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration.Companion.minutes
@@ -40,16 +41,6 @@ object RackTimeScreen
 fun RackTimeScreen(
     modifier: Modifier = Modifier
 ) {
-    val menuItemDataMap = mapOf(
-        "0" to 0.0,
-        "1/8" to 0.125,
-        "1/4" to 0.25,
-        "3/8" to 0.375,
-        "1/2" to 0.5,
-        "5/8" to 0.625,
-        "3/4" to .75,
-        "7/8" to 0.875
-    )
     var pullerSpeed by remember { mutableStateOf("2.5") }
     var currentLength by remember { mutableStateOf("252") }
     var currentFraction: String by remember { mutableStateOf("0") }
@@ -99,7 +90,7 @@ fun RackTimeScreen(
                     expanded = isExpanded,
                     onDismissRequest = { isExpanded = false }
                 ) {
-                    menuItemDataMap.forEach { option ->
+                    DataSource.fractionMap.forEach { option ->
                         DropdownMenuItem(
                             text = { Text(option.key) },
                             onClick = {
