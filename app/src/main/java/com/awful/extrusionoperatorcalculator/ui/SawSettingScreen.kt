@@ -191,7 +191,7 @@ fun calculateDesiredSetting(
 fun SawSettingScreenPreview() {
     ExtrusionOperatorCalculatorTheme {
         SawSettingScreen(
-            modifier = Modifier.padding()
+            modifier = Modifier
         )
     }
 }

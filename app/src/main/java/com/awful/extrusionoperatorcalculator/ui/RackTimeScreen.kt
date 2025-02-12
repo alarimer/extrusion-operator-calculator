@@ -165,7 +165,7 @@ fun calculateRackTime(
 fun RackTimeScreenPreview() {
     ExtrusionOperatorCalculatorTheme {
         RackTimeScreen(
-            modifier = Modifier.padding()
+            modifier = Modifier
         )
     }
 }
