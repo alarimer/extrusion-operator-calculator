@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.data.DataSource
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
@@ -52,6 +53,15 @@ fun RackTimeScreen(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
+        Text(
+            stringResource(R.string.rack_time),
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(
+            modifier = Modifier.padding(16.dp)
+        )
         // puller speed
         TextField(
             value = pullerSpeed,
@@ -130,7 +140,8 @@ fun RackTimeScreen(
                     currentLength.toDouble(),
                     piecesPerRack.toDouble()
                 )
-            }
+            },
+            modifier = modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(stringResource(R.string.calculate))
         }
@@ -138,7 +149,12 @@ fun RackTimeScreen(
             modifier = Modifier.padding(4.dp)
         )
         // rack time
-        Text("Rack time: $rackTime", fontWeight = FontWeight.Bold)
+        Text(
+            "Rack time: $rackTime",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
 

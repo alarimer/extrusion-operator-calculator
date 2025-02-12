@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.data.DataSource
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
@@ -52,6 +53,15 @@ fun SawSettingScreen(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
+        Text(
+            stringResource(R.string.saw_setting),
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = modifier.align(Alignment.CenterHorizontally)
+        )
+        Spacer(
+            modifier = Modifier.padding(16.dp)
+        )
         // current length
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -158,7 +168,8 @@ fun SawSettingScreen(
                     desiredLength.toDouble(),
                     currentSetting.toDouble()
                 )
-            }
+            },
+            modifier = modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(stringResource(R.string.calculate))
         }
@@ -166,7 +177,12 @@ fun SawSettingScreen(
             modifier = Modifier.padding(4.dp)
         )
         // desired setting
-        Text("New Setting: $desiredSetting", fontWeight = FontWeight.Bold)
+        Text(
+            "New Setting: $desiredSetting",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
 
