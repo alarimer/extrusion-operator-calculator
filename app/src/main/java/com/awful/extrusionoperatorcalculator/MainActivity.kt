@@ -34,7 +34,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
+import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +47,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ExtrusionOperatorCalculatorTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    SawSettingScreen(
+                    EocApp(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -51,6 +55,27 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+@Composable
+fun EocApp(
+    modifier: Modifier
+) {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = SawSettingScreen,
+        modifier = modifier
+    ) {
+        composable<SawSettingScreen> {
+            SawSettingScreen(
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Serializable
+object SawSettingScreen
 
 @Composable
 fun SawSettingScreen(
