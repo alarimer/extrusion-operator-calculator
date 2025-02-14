@@ -8,15 +8,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -26,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,15 +53,19 @@ fun SawSettingScreen(
     modifier: Modifier = Modifier
 ) {
     var currentLength by remember { mutableStateOf("252") }
+    var isErrorCL by remember { mutableStateOf(false) }
     var currentFraction: String by remember { mutableStateOf("0") }
     var desiredLength by remember { mutableStateOf("252") }
+    var isErrorDL by remember { mutableStateOf(false) }
     var desiredFraction: String by remember { mutableStateOf("0") }
     var currentSetting by remember { mutableStateOf("252") }
+    var isErrorCS by remember { mutableStateOf(false) }
     var desiredSetting by remember { mutableStateOf("0") }
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
+        // title and back button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
@@ -83,14 +92,31 @@ fun SawSettingScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
+                singleLine = true,
                 value = currentLength,
-                onValueChange = { currentLength = it },
+                onValueChange = {
+                    currentLength = it
+                    isErrorCL = currentLength.toIntOrNull() == null
+                },
                 label = { Text(stringResource(R.string.current_length)) },
                 placeholder = { Text(stringResource(R.string.inches)) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
-                )
+                ),
+                supportingText = {
+                    if (isErrorCL) {
+                        Text(
+                            text = "Whole Number only",
+                            color = Color.Red
+                        )
+                    }
+                },
+                trailingIcon = {
+                    if (isErrorCL) {
+                        Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    }
+                }
             )
             Text(currentFraction, modifier = Modifier.padding(16.dp))
             Box(
@@ -110,7 +136,6 @@ fun SawSettingScreen(
                             onClick = {
                                 currentFraction = option.key
                                 isExpanded = false
-                                currentLength = (currentLength.toDouble().toInt() + option.value).toString()
                             }
                         )
                     }
@@ -125,14 +150,31 @@ fun SawSettingScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
+                singleLine = true,
                 value = desiredLength,
-                onValueChange = { desiredLength = it },
+                onValueChange = {
+                    desiredLength = it
+                    isErrorDL = desiredLength.toIntOrNull() == null
+                },
                 label = { Text(stringResource(R.string.desired_length)) },
                 placeholder = { Text(stringResource(R.string.inches)) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
-                )
+                ),
+                supportingText = {
+                    if (isErrorDL) {
+                        Text(
+                            text = "Whole Number only",
+                            color = Color.Red
+                        )
+                    }
+                },
+                trailingIcon = {
+                    if (isErrorDL) {
+                        Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    }
+                }
             )
             Text(desiredFraction, modifier = Modifier.padding(16.dp))
             Box(
@@ -152,7 +194,6 @@ fun SawSettingScreen(
                             onClick = {
                                 desiredFraction = option.key
                                 isExpanded = false
-                                desiredLength = (desiredLength.toDouble().toInt() + option.value).toString()
                             }
                         )
                     }
@@ -163,16 +204,50 @@ fun SawSettingScreen(
             modifier = Modifier.padding(4.dp)
         )
         // current setting
-        TextField(
-            value = currentSetting,
-            onValueChange = { currentSetting = it },
-            label = { Text(stringResource(R.string.current_setting)) },
-            placeholder = { Text(stringResource(R.string.inches)) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val kbController = LocalSoftwareKeyboardController.current
+            TextField(
+                singleLine = true,
+                value = currentSetting,
+                onValueChange = {
+                    currentSetting = it
+                    isErrorCS = currentSetting.toDoubleOrNull() == null
+                },
+                label = { Text(stringResource(R.string.current_setting)) },
+                placeholder = { Text(stringResource(R.string.inches)) },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                supportingText = {
+                    if (isErrorCS) {
+                        Text(
+                            text = "Decimal Number only",
+                            color = Color.Red
+                        )
+                    }
+                },
+                trailingIcon = {
+                    if (isErrorCS) {
+                        Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    }
+                },
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        kbController?.hide()
+                        desiredSetting = calculateDesiredSetting(
+                            currentLength.toDouble(),
+                            DataSource.fractionMap[currentFraction] ?: 0.0,
+                            desiredLength.toDouble(),
+                            DataSource.fractionMap[desiredFraction] ?: 0.0,
+                            currentSetting.toDouble()
+                        )
+                    }
+                )
             )
-        )
+        }
         Spacer(
             modifier = Modifier.padding(4.dp)
         )
@@ -181,10 +256,13 @@ fun SawSettingScreen(
             onClick = {
                 desiredSetting = calculateDesiredSetting(
                     currentLength.toDouble(),
+                    DataSource.fractionMap[currentFraction] ?: 0.0,
                     desiredLength.toDouble(),
+                    DataSource.fractionMap[desiredFraction] ?: 0.0,
                     currentSetting.toDouble()
                 )
             },
+            enabled = !isErrorCL && !isErrorDL && !isErrorCS,
             modifier = modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(stringResource(R.string.calculate))
@@ -202,13 +280,18 @@ fun SawSettingScreen(
     }
 }
 
+//fun isInteger(text: String) :Boolean {
+//}
+
 // rounds the result to the nearest 1/8 inch
 fun calculateDesiredSetting(
     currentLength: Double,
+    currentFraction: Double,
     desiredLength: Double,
+    desiredFraction:Double,
     currentSetting: Double
 ): String {
-    return (round(currentSetting * desiredLength / currentLength * 8) / 8).toString()
+    return (round((currentSetting + currentFraction) * (desiredLength + desiredFraction) / currentLength * 8) / 8).toString()
 }
 
 @Preview(showBackground = true)

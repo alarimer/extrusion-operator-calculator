@@ -8,15 +8,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -26,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,14 +53,18 @@ fun RackTimeScreen(
     modifier: Modifier = Modifier
 ) {
     var pullerSpeed by remember { mutableStateOf("2.5") }
+    var isErrorPS by remember { mutableStateOf(false) }
     var currentLength by remember { mutableStateOf("252") }
+    var isErrorCL by remember { mutableStateOf(false) }
     var currentFraction: String by remember { mutableStateOf("0") }
     var piecesPerRack by remember { mutableStateOf("60") }
+    var isErrorPPR by remember { mutableStateOf(false) }
     var rackTime by remember { mutableStateOf("0") }
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
     ) {
+        // title and back button
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
@@ -79,14 +88,31 @@ fun RackTimeScreen(
         )
         // puller speed
         TextField(
+            singleLine = true,
             value = pullerSpeed,
-            onValueChange = { pullerSpeed = it },
+            onValueChange = {
+                pullerSpeed = it
+                isErrorPS = pullerSpeed.toDoubleOrNull() == null
+            },
             label = { Text(stringResource(R.string.puller_speed)) },
             placeholder = { Text(stringResource(R.string.meters_per_minute)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
-            )
+            ),
+            supportingText = {
+                if (isErrorPS) {
+                    Text(
+                        text = "Decimal Number only",
+                        color = Color.Red
+                    )
+                }
+            },
+            trailingIcon = {
+                if (isErrorPS) {
+                    Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                }
+            }
         )
         Spacer(
             modifier = Modifier.padding(4.dp)
@@ -96,14 +122,31 @@ fun RackTimeScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
+                singleLine = true,
                 value = currentLength,
-                onValueChange = { currentLength = it },
+                onValueChange = {
+                    currentLength = it
+                    isErrorCL = currentLength.toIntOrNull() == null
+                },
                 label = { Text(stringResource(R.string.current_length)) },
                 placeholder = { Text(stringResource(R.string.inches)) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
-                )
+                ),
+                supportingText = {
+                    if (isErrorCL) {
+                        Text(
+                            text = "Whole Number only",
+                            color = Color.Red
+                        )
+                    }
+                },
+                trailingIcon = {
+                    if (isErrorCL) {
+                        Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    }
+                }
             )
             Text(currentFraction, modifier = Modifier.padding(16.dp))
             Box(
@@ -123,7 +166,6 @@ fun RackTimeScreen(
                             onClick = {
                                 currentFraction = option.key
                                 isExpanded = false
-                                currentLength = (currentLength.toDouble().toInt() + option.value).toString()
                             }
                         )
                     }
@@ -134,14 +176,43 @@ fun RackTimeScreen(
             modifier = Modifier.padding(4.dp)
         )
         // pieces per rack
+        val kbController = LocalSoftwareKeyboardController.current
         TextField(
+            singleLine = true,
             value = piecesPerRack,
-            onValueChange = { piecesPerRack = it },
+            onValueChange = {
+                piecesPerRack = it
+                isErrorPPR = piecesPerRack.toIntOrNull() == null
+            },
             label = { Text(stringResource(R.string.pieces_per_rack)) },
             placeholder = { Text(stringResource(R.string.number)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Done
+            ),
+            supportingText = {
+                if (isErrorPPR) {
+                    Text(
+                        text = "Whole Number only",
+                        color = Color.Red
+                    )
+                }
+            },
+            trailingIcon = {
+                if (isErrorPPR) {
+                    Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                }
+            },
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    kbController?.hide()
+                    rackTime = calculateRackTime(
+                        pullerSpeed.toDouble(),
+                        currentLength.toDouble(),
+                        DataSource.fractionMap[currentFraction] ?: 0.0,
+                        piecesPerRack.toDouble()
+                    )
+                }
             )
         )
         Spacer(
@@ -153,9 +224,11 @@ fun RackTimeScreen(
                 rackTime = calculateRackTime(
                     pullerSpeed.toDouble(),
                     currentLength.toDouble(),
+                    DataSource.fractionMap[currentFraction] ?: 0.0,
                     piecesPerRack.toDouble()
                 )
             },
+            enabled = !isErrorPS && !isErrorCL && !isErrorPPR,
             modifier = modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(stringResource(R.string.calculate))
@@ -176,9 +249,10 @@ fun RackTimeScreen(
 fun calculateRackTime(
     pullerSpeed: Double,
     profileLength: Double,
+    profileFraction: Double,
     piecesPerRack: Double
 ): String {
-    val minutesPerRack = (piecesPerRack * profileLength * .0254 / pullerSpeed).minutes
+    val minutesPerRack = (piecesPerRack * (profileLength + profileFraction) * .0254 / pullerSpeed).minutes
     return minutesPerRack.toComponents {
             hours, minutes, _, _ -> "$hours:$minutes (h:mm)"
     }
