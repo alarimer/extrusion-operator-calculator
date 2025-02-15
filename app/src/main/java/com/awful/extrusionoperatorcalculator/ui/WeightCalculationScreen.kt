@@ -1,5 +1,6 @@
 package com.awful.extrusionoperatorcalculator.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
-import java.util.Locale
 
 @Serializable
 object WeightCalculationScreen
@@ -206,14 +206,15 @@ fun WeightCalculationScreen(
     }
 }
 
+@SuppressLint("DefaultLocale")
 fun calculateWeightInfo(
     currentWeight: Double,
     standardWeight: Double
 ): Triple<String, String, String> {
     return Triple(
-        String.format(Locale.ROOT, "%.2f", (currentWeight / standardWeight).toString()),
-        String.format(Locale.ROOT, "%.1f", (standardWeight * 90.0).toString()),
-        String.format(Locale.ROOT, "%.1f", (standardWeight * 110.0).toString())
+        String.format("%.2f", currentWeight / standardWeight * 100),
+        String.format("%.1f", standardWeight * 0.9),
+        String.format("%.1f", standardWeight * 1.1)
     )
 }
 

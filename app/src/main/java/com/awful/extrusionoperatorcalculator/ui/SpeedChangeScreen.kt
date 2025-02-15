@@ -1,5 +1,6 @@
 package com.awful.extrusionoperatorcalculator.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
-import java.util.Locale
 
 @Serializable
 object SpeedChangeScreen
@@ -275,6 +275,7 @@ fun SpeedChangeScreen(
     }
 }
 
+@SuppressLint("DefaultLocale")
 fun calculateNewSettings(
     currentPullerSetting: Double,
     currentFeederSetting: Double,
@@ -283,14 +284,12 @@ fun calculateNewSettings(
 ) :Pair<String, String> {
     return Pair(
         String.format(
-            Locale.ROOT,
             "%.2f",
-            (targetPullerSpeed * currentFeederSetting / currentPullerSetting).toString()
+            targetPullerSpeed * currentFeederSetting / currentPullerSetting
         ),
         String.format(
-            Locale.ROOT,
             "%.2f",
-            (targetPullerSpeed * currentExtruderSetting / currentPullerSetting).toString()
+            targetPullerSpeed * currentExtruderSetting / currentPullerSetting
         )
     )
 }
