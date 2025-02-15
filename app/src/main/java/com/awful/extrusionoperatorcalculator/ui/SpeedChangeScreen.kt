@@ -294,7 +294,7 @@ fun calculateNewSettings(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SpeedChangeSettingScreenPreview() {
     ExtrusionOperatorCalculatorTheme {

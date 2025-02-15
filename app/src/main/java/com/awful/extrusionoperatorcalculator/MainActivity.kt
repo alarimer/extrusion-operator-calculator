@@ -17,6 +17,7 @@ import com.awful.extrusionoperatorcalculator.ui.RackTimeScreen
 import com.awful.extrusionoperatorcalculator.ui.SawSettingScreen
 import com.awful.extrusionoperatorcalculator.ui.SelectionScreen
 import com.awful.extrusionoperatorcalculator.ui.SpeedChangeScreen
+import com.awful.extrusionoperatorcalculator.ui.WeatherstripTimeScreen
 import com.awful.extrusionoperatorcalculator.ui.WeightCalculationScreen
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 
@@ -58,10 +59,10 @@ fun EocApp(
                 modifier = modifier
             )
         }
-        composable<RackTimeScreen> {
-            RackTimeScreen(
+        composable<WeightCalculationScreen> {
+            WeightCalculationScreen(
                 onBack = { navController.navigateUp() },
-                modifier =  modifier
+                modifier = modifier
             )
         }
         composable<SpeedChangeScreen> {
@@ -70,8 +71,14 @@ fun EocApp(
                 modifier = modifier
             )
         }
-        composable<WeightCalculationScreen> {
-            WeightCalculationScreen(
+        composable<RackTimeScreen> {
+            RackTimeScreen(
+                onBack = { navController.navigateUp() },
+                modifier =  modifier
+            )
+        }
+        composable<WeatherstripTimeScreen> {
+            WeatherstripTimeScreen(
                 onBack = { navController.navigateUp() },
                 modifier = modifier
             )

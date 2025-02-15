@@ -218,7 +218,7 @@ fun calculateWeightInfo(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun WeightCalculationScreenPreview() {
     ExtrusionOperatorCalculatorTheme {

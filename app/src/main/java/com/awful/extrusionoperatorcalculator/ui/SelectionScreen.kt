@@ -41,9 +41,9 @@ fun SelectionScreen(
             modifier = Modifier.padding(4.dp)
         )
         Button(
-            onClick = { navController.navigate(RackTimeScreen) }
+            onClick = { navController.navigate(WeightCalculationScreen) }
         ) {
-            Text(stringResource(R.string.rack_time))
+            Text(stringResource(R.string.weight_calculation))
         }
         Spacer(
             modifier = Modifier.padding(4.dp)
@@ -57,9 +57,17 @@ fun SelectionScreen(
             modifier = Modifier.padding(4.dp)
         )
         Button(
-            onClick = { navController.navigate(WeightCalculationScreen) }
+            onClick = { navController.navigate(RackTimeScreen) }
         ) {
-            Text(stringResource(R.string.weight_calculation))
+            Text(stringResource(R.string.rack_time))
+        }
+        Spacer(
+            modifier = Modifier.padding(4.dp)
+        )
+        Button(
+            onClick = { navController.navigate(WeatherstripTimeScreen) }
+        ) {
+            Text(stringResource(R.string.weatherstrip_calculation))
         }
     }
 }

@@ -2,7 +2,6 @@ package com.awful.extrusionoperatorcalculator.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,11 +12,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,27 +36,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.awful.extrusionoperatorcalculator.R
-import com.awful.extrusionoperatorcalculator.data.DataSource
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration.Companion.minutes
 
 @Serializable
-object RackTimeScreen
+object WeatherstripTimeScreen
 
 @Composable
-fun RackTimeScreen(
+fun WeatherstripTimeScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var pullerSpeed by remember { mutableStateOf("2.5") }
     var isErrorPS by remember { mutableStateOf(false) }
-    var currentLength by remember { mutableStateOf("252") }
-    var isErrorCL by remember { mutableStateOf(false) }
-    var currentFraction: String by remember { mutableStateOf("0") }
-    var piecesPerRack by remember { mutableStateOf("60") }
-    var isErrorPPR by remember { mutableStateOf(false) }
-    var rackTime by remember { mutableStateOf("0:00 (h:mm)") }
+    var spoolLength by remember { mutableStateOf("3500") }
+    var isErrorSL by remember { mutableStateOf(false) }
+    var spoolTime by remember { mutableStateOf("0:00 (h:mm)") }
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
@@ -79,7 +71,7 @@ fun RackTimeScreen(
             }
             Spacer(modifier = Modifier.padding(24.dp))
             Text(
-                stringResource(R.string.rack_time),
+                stringResource(R.string.weatherstrip_calculation),
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -122,88 +114,23 @@ fun RackTimeScreen(
         Spacer(
             modifier = Modifier.padding(4.dp)
         )
-        // profile length
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(
-                singleLine = true,
-                value = currentLength,
-                onValueChange = {
-                    currentLength = it
-                    isErrorCL = currentLength.toIntOrNull() == null
-                },
-                label = { Text(stringResource(R.string.current_length)) },
-                placeholder = { Text(stringResource(R.string.inches)) },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
-                ),
-                supportingText = {
-                    if (isErrorCL) {
-                        Text(
-                            text = stringResource(R.string.whole_number_only),
-                            color = Color.Red
-                        )
-                    }
-                },
-                trailingIcon = {
-                    if (isErrorCL) {
-                        Icon(
-                            Icons.Filled.Warning,
-                            stringResource(R.string.error),
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                    }
-                }
-            )
-            Text(currentFraction, modifier = Modifier.padding(16.dp))
-            Box(
-                modifier = modifier
-            ) {
-                var isExpanded by remember { mutableStateOf(false) }
-                IconButton(onClick = { isExpanded = !isExpanded }) {
-                    Icon(
-                        Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.select_fraction)
-                    )
-                }
-                DropdownMenu(
-                    expanded = isExpanded,
-                    onDismissRequest = { isExpanded = false }
-                ) {
-                    DataSource.fractionMap.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option.key) },
-                            onClick = {
-                                currentFraction = option.key
-                                isExpanded = false
-                            }
-                        )
-                    }
-                }
-            }
-        }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // pieces per rack
+        // spool length
         val kbController = LocalSoftwareKeyboardController.current
         TextField(
             singleLine = true,
-            value = piecesPerRack,
+            value = spoolLength,
             onValueChange = {
-                piecesPerRack = it
-                isErrorPPR = piecesPerRack.toIntOrNull() == null
+                spoolLength = it
+                isErrorSL = spoolLength.toIntOrNull() == null
             },
-            label = { Text(stringResource(R.string.pieces_per_rack)) },
-            placeholder = { Text(stringResource(R.string.number)) },
+            label = { Text(stringResource(R.string.current_length)) },
+            placeholder = { Text(stringResource(R.string.feet)) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
             supportingText = {
-                if (isErrorPPR) {
+                if (isErrorSL) {
                     Text(
                         text = stringResource(R.string.whole_number_only),
                         color = Color.Red
@@ -211,7 +138,7 @@ fun RackTimeScreen(
                 }
             },
             trailingIcon = {
-                if (isErrorPPR) {
+                if (isErrorSL) {
                     Icon(
                         Icons.Filled.Warning,
                         stringResource(R.string.error),
@@ -222,11 +149,9 @@ fun RackTimeScreen(
             keyboardActions = KeyboardActions(
                 onDone = {
                     kbController?.hide()
-                    rackTime = calculateRackTime(
+                    spoolTime = calculateSpoolTime(
                         pullerSpeed.toDouble(),
-                        currentLength.toDouble(),
-                        DataSource.fractionMap[currentFraction] ?: 0.0,
-                        piecesPerRack.toDouble()
+                        spoolLength.toInt()
                     )
                 }
             )
@@ -237,14 +162,12 @@ fun RackTimeScreen(
         // calculate button
         Button(
             onClick = {
-                rackTime = calculateRackTime(
+                spoolTime = calculateSpoolTime(
                     pullerSpeed.toDouble(),
-                    currentLength.toDouble(),
-                    DataSource.fractionMap[currentFraction] ?: 0.0,
-                    piecesPerRack.toDouble()
+                    spoolLength.toInt()
                 )
             },
-            enabled = !isErrorPS && !isErrorCL && !isErrorPPR,
+            enabled = !isErrorPS && !isErrorSL,
             modifier = modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(stringResource(R.string.calculate))
@@ -254,7 +177,7 @@ fun RackTimeScreen(
         )
         // rack time
         Text(
-            "Rack time: $rackTime",
+            "Rack time: $spoolTime",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = modifier.align(Alignment.CenterHorizontally)
@@ -263,13 +186,11 @@ fun RackTimeScreen(
 }
 
 @SuppressLint("DefaultLocale")
-fun calculateRackTime(
+fun calculateSpoolTime(
     pullerSpeed: Double,
-    profileLength: Double,
-    profileFraction: Double,
-    piecesPerRack: Double
+    spoolLength: Int
 ): String {
-    val minutesPerRack = (piecesPerRack * (profileLength + profileFraction) * .0254 / pullerSpeed).minutes
+    val minutesPerRack = (spoolLength * .3048 / pullerSpeed).minutes
     return minutesPerRack.toComponents {
             hours, minutes, _, _ -> "$hours:" + String.format("%02d", minutes) + " (h:mm)"
     }
@@ -277,9 +198,9 @@ fun calculateRackTime(
 
 @Preview(showBackground = true)
 @Composable
-fun RackTimeScreenPreview() {
+fun WeatherstripTimeScreenPreview() {
     ExtrusionOperatorCalculatorTheme {
-        RackTimeScreen(
+        WeatherstripTimeScreen(
             onBack = {},
             modifier = Modifier
         )

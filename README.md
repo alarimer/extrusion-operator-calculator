@@ -15,7 +15,7 @@ A tool for common Extrusion Operator calculations.
 - Input the `Current Puller Speed`, the `Current Feeder Rate`, the `Current Extruder Rate`, and the `New Puller Speed`.
 - Outputs the `New Feeder Rate` , and the `New Extruder Rate`.
 
-### Weatherstrip Usage (TODO)
+### Weatherstrip Time
 - Input the `Puller Speed`, and the `Spool Length`.
 - Outputs the `Time` in hours and minutes.
 

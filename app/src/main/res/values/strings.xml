@@ -5,6 +5,7 @@
     <string name="rack_time">Rack Time</string>
     <string name="speed_change">Speed Change</string>
     <string name="weight_calculation">Weight Calculation</string>
+    <string name="weatherstrip_calculation">Weatherstrip Time</string>
     <!-- content description -->
     <string name="back_button">Back to Tool Selection</string>
     <string name="select_fraction">Select fraction</string>
@@ -19,6 +20,7 @@
     <string name="number">number</string>
     <string name="rpm">rpm</string>
     <string name="grams_per_meter">g/m</string>
+    <string name="feet">feet</string>
     <!-- input fields -->
     <string name="current_length">Current Length</string>
     <string name="desired_length">Desired Length</string>
@@ -31,4 +33,5 @@
     <string name="target_puller_speed">Target Puller Speed</string>
     <string name="current_weight">Current Weight</string>
     <string name="standard_weight">Standard Weight</string>
+    <string name="spool_length">Spool Length</string>
 </resources>
