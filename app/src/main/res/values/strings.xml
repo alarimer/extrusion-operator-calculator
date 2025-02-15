@@ -2,15 +2,21 @@
     <string name="app_name">Extrusion Operator Calculator</string>
     <string name="saw_setting">Saw Setting</string>
     <string name="rack_time">Rack Time</string>
+    <string name="speed_change">Speed Change</string>
     <string name="back_button">Back to Tool Selection</string>
     <string name="calculate">Calculate</string>
     <string name="inches">inches</string>
     <string name="meters_per_minute">m/min</string>
     <string name="number">number</string>
+    <string name="rpm">rpm</string>
     <string name="select_fraction">Select fraction</string>
     <string name="current_length">Current Length</string>
     <string name="desired_length">Desired Length</string>
     <string name="current_setting">Current Setting</string>
     <string name="puller_speed">Puller Speed</string>
     <string name="pieces_per_rack">Pieces per Rack</string>
+    <string name="current_puller_speed">Current Puller Speed</string>
+    <string name="current_feeder_speed">Current Feeder Speed</string>
+    <string name="current_extruder_speed">Current Extruder Speed</string>
+    <string name="target_puller_speed">Target Puller Speed</string>
 </resources>

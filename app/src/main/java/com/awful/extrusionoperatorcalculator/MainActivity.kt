@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.awful.extrusionoperatorcalculator.ui.RackTimeScreen
 import com.awful.extrusionoperatorcalculator.ui.SawSettingScreen
 import com.awful.extrusionoperatorcalculator.ui.SelectionScreen
+import com.awful.extrusionoperatorcalculator.ui.SpeedChangeScreen
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -60,6 +61,12 @@ fun EocApp(
             RackTimeScreen(
                 onBack = { navController.navigateUp() },
                 modifier =  modifier
+            )
+        }
+        composable<SpeedChangeScreen> {
+            SpeedChangeScreen(
+                onBack = { navController.navigateUp() },
+                modifier = modifier
             )
         }
     }

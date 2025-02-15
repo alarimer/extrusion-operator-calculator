@@ -60,7 +60,7 @@ fun SawSettingScreen(
     var desiredFraction: String by remember { mutableStateOf("0") }
     var currentSetting by remember { mutableStateOf("252") }
     var isErrorCS by remember { mutableStateOf(false) }
-    var desiredSetting by remember { mutableStateOf("0") }
+    var newSetting by remember { mutableStateOf("0") }
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center
@@ -237,7 +237,7 @@ fun SawSettingScreen(
                 keyboardActions = KeyboardActions(
                     onDone = {
                         kbController?.hide()
-                        desiredSetting = calculateDesiredSetting(
+                        newSetting = calculateNewSetting(
                             currentLength.toDouble(),
                             DataSource.fractionMap[currentFraction] ?: 0.0,
                             desiredLength.toDouble(),
@@ -254,7 +254,7 @@ fun SawSettingScreen(
         // calculate button
         Button(
             onClick = {
-                desiredSetting = calculateDesiredSetting(
+                newSetting = calculateNewSetting(
                     currentLength.toDouble(),
                     DataSource.fractionMap[currentFraction] ?: 0.0,
                     desiredLength.toDouble(),
@@ -270,9 +270,9 @@ fun SawSettingScreen(
         Spacer(
             modifier = Modifier.padding(4.dp)
         )
-        // desired setting
+        // new setting
         Text(
-            "New Setting: $desiredSetting",
+            "New Setting: $newSetting",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = modifier.align(Alignment.CenterHorizontally)
@@ -280,11 +280,8 @@ fun SawSettingScreen(
     }
 }
 
-//fun isInteger(text: String) :Boolean {
-//}
-
 // rounds the result to the nearest 1/8 inch
-fun calculateDesiredSetting(
+fun calculateNewSetting(
     currentLength: Double,
     currentFraction: Double,
     desiredLength: Double,

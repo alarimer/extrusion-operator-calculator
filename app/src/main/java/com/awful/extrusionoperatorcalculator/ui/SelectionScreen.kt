@@ -45,6 +45,14 @@ fun SelectionScreen(
         ) {
             Text(stringResource(R.string.rack_time))
         }
+        Spacer(
+            modifier = Modifier.padding(4.dp)
+        )
+        Button(
+            onClick = { navController.navigate(SpeedChangeScreen) }
+        ) {
+            Text(stringResource(R.string.speed_change))
+        }
     }
 }
 

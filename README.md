@@ -11,7 +11,7 @@ A tool for common Extrusion Operator calculations.
 - Input the `Puller Speed`, the `Current Length` of the profile, and the number of  `Pieces per Rack`.
 - Outputs the `Rack Time` in hours and minutes. (does not account for samples or NCM)
 
-### Speed Change (TODO)
+### Speed Change
 - Input the `Current Puller Speed`, the `Current Feeder Rate`, the `Current Extruder Rate`, and the `New Puller Speed`.
 - Outputs the `New Feeder Rate` , and the `New Extruder Rate`.
 
