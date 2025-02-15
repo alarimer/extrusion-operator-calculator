@@ -16,7 +16,7 @@
     <string name="puller_speed">Puller Speed</string>
     <string name="pieces_per_rack">Pieces per Rack</string>
     <string name="current_puller_speed">Current Puller Speed</string>
-    <string name="current_feeder_speed">Current Feeder Speed</string>
-    <string name="current_extruder_speed">Current Extruder Speed</string>
+    <string name="current_feeder_speed">Current Feeder Rate</string>
+    <string name="current_extruder_speed">Current Extruder Rate</string>
     <string name="target_puller_speed">Target Puller Speed</string>
 </resources>
