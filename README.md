@@ -24,11 +24,11 @@ A tool for common Extrusion Operator calculations.
 - Input the `Current Weight`, and the `Standard Weight`.
 - Outputs the `Current Percentage`, the `Minimum Weight`, and the `Maximum Weight`.
 
-#### Weight Adjustmnet for ECS (TODO)
+#### Weight Adjustment for ECS (TODO)
 - Input the `Set Point`, the `Current Weight`, and the `Current Weight Percentage`.
 - Outputs TBD. (Likely `Set Point for 100%`, `Set Point for +1%`, `Percentage Increase for each +5 Set Point`, ...)
 
-#### Weight Adjustmnet for non-ECS (TODO)
+#### Weight Adjustment for non-ECS (TODO)
 TBD
 
 
