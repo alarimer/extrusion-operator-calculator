@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
+import java.util.Locale
 
 @Serializable
 object SpeedChangeScreen
@@ -99,14 +100,18 @@ fun SpeedChangeScreen(
             supportingText = {
                 if (isErrorCPS) {
                     Text(
-                        text = "Decimal Number only",
+                        text = stringResource(R.string.decimal_number_only),
                         color = Color.Red
                     )
                 }
             },
             trailingIcon = {
                 if (isErrorCPS) {
-                    Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    Icon(
+                        Icons.Filled.Warning,
+                        stringResource(R.string.error),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         )
@@ -130,14 +135,18 @@ fun SpeedChangeScreen(
             supportingText = {
                 if (isErrorCFS) {
                     Text(
-                        text = "Decimal Number only",
+                        text = stringResource(R.string.decimal_number_only),
                         color = Color.Red
                     )
                 }
             },
             trailingIcon = {
                 if (isErrorCFS) {
-                    Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    Icon(
+                        Icons.Filled.Warning,
+                        stringResource(R.string.error),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         )
@@ -161,14 +170,18 @@ fun SpeedChangeScreen(
             supportingText = {
                 if (isErrorCES) {
                     Text(
-                        text = "Decimal Number only",
+                        text = stringResource(R.string.decimal_number_only),
                         color = Color.Red
                     )
                 }
             },
             trailingIcon = {
                 if (isErrorCES) {
-                    Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    Icon(
+                        Icons.Filled.Warning,
+                        stringResource(R.string.error),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         )
@@ -193,14 +206,18 @@ fun SpeedChangeScreen(
             supportingText = {
                 if (isErrorTPS) {
                     Text(
-                        text = "Decimal Number only",
+                        text = stringResource(R.string.decimal_number_only),
                         color = Color.Red
                     )
                 }
             },
             trailingIcon = {
                 if (isErrorTPS) {
-                    Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    Icon(
+                        Icons.Filled.Warning,
+                        stringResource(R.string.error),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
             },
             keyboardActions = KeyboardActions(
@@ -265,8 +282,16 @@ fun calculateNewSettings(
     targetPullerSpeed: Double
 ) :Pair<String, String> {
     return Pair(
-        (targetPullerSpeed * currentFeederSetting / currentPullerSetting).toString(),
-        (targetPullerSpeed * currentExtruderSetting / currentPullerSetting).toString()
+        String.format(
+            Locale.ROOT,
+            "%.2f",
+            (targetPullerSpeed * currentFeederSetting / currentPullerSetting).toString()
+        ),
+        String.format(
+            Locale.ROOT,
+            "%.2f",
+            (targetPullerSpeed * currentExtruderSetting / currentPullerSetting).toString()
+        )
     )
 }
 

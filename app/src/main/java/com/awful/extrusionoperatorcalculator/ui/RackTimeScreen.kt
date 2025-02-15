@@ -103,14 +103,18 @@ fun RackTimeScreen(
             supportingText = {
                 if (isErrorPS) {
                     Text(
-                        text = "Decimal Number only",
+                        text = stringResource(R.string.decimal_number_only),
                         color = Color.Red
                     )
                 }
             },
             trailingIcon = {
                 if (isErrorPS) {
-                    Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    Icon(
+                        Icons.Filled.Warning,
+                        stringResource(R.string.error),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         )
@@ -137,14 +141,18 @@ fun RackTimeScreen(
                 supportingText = {
                     if (isErrorCL) {
                         Text(
-                            text = "Whole Number only",
+                            text = stringResource(R.string.whole_number_only),
                             color = Color.Red
                         )
                     }
                 },
                 trailingIcon = {
                     if (isErrorCL) {
-                        Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                        Icon(
+                            Icons.Filled.Warning,
+                            stringResource(R.string.error),
+                            tint = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             )
@@ -154,7 +162,10 @@ fun RackTimeScreen(
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 IconButton(onClick = { isExpanded = !isExpanded }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.select_fraction))
+                    Icon(
+                        Icons.Default.MoreVert,
+                        contentDescription = stringResource(R.string.select_fraction)
+                    )
                 }
                 DropdownMenu(
                     expanded = isExpanded,
@@ -193,14 +204,18 @@ fun RackTimeScreen(
             supportingText = {
                 if (isErrorPPR) {
                     Text(
-                        text = "Whole Number only",
+                        text = stringResource(R.string.whole_number_only),
                         color = Color.Red
                     )
                 }
             },
             trailingIcon = {
                 if (isErrorPPR) {
-                    Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                    Icon(
+                        Icons.Filled.Warning,
+                        stringResource(R.string.error),
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
             },
             keyboardActions = KeyboardActions(

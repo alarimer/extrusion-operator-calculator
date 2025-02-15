@@ -212,8 +212,8 @@ fun calculateWeightInfo(
 ): Triple<String, String, String> {
     return Triple(
         String.format(Locale.ROOT, "%.2f", (currentWeight / standardWeight).toString()),
-        String.format(Locale.ROOT, "%.2f", (standardWeight * 90.0).toString()),
-        String.format(Locale.ROOT, "%.2f", (standardWeight * 110.0).toString())
+        String.format(Locale.ROOT, "%.1f", (standardWeight * 90.0).toString()),
+        String.format(Locale.ROOT, "%.1f", (standardWeight * 110.0).toString())
     )
 }
 

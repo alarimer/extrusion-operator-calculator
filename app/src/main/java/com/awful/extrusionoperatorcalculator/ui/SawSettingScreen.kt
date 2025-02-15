@@ -107,14 +107,18 @@ fun SawSettingScreen(
                 supportingText = {
                     if (isErrorCL) {
                         Text(
-                            text = "Whole Number only",
+                            text = stringResource(R.string.whole_number_only),
                             color = Color.Red
                         )
                     }
                 },
                 trailingIcon = {
                     if (isErrorCL) {
-                        Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                        Icon(
+                            Icons.Filled.Warning,
+                            stringResource(R.string.error),
+                            tint = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             )
@@ -124,7 +128,10 @@ fun SawSettingScreen(
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 IconButton(onClick = { isExpanded = !isExpanded }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.select_fraction))
+                    Icon(
+                        Icons.Default.MoreVert,
+                        contentDescription = stringResource(R.string.select_fraction)
+                    )
                 }
                 DropdownMenu(
                     expanded = isExpanded,
@@ -165,14 +172,18 @@ fun SawSettingScreen(
                 supportingText = {
                     if (isErrorDL) {
                         Text(
-                            text = "Whole Number only",
+                            text = stringResource(R.string.whole_number_only),
                             color = Color.Red
                         )
                     }
                 },
                 trailingIcon = {
                     if (isErrorDL) {
-                        Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                        Icon(
+                            Icons.Filled.Warning,
+                            stringResource(R.string.error),
+                            tint = MaterialTheme.colorScheme.error
+                        )
                     }
                 }
             )
@@ -224,14 +235,18 @@ fun SawSettingScreen(
                 supportingText = {
                     if (isErrorCS) {
                         Text(
-                            text = "Decimal Number only",
+                            text = stringResource(R.string.decimal_number_only),
                             color = Color.Red
                         )
                     }
                 },
                 trailingIcon = {
                     if (isErrorCS) {
-                        Icon(Icons.Filled.Warning, "error", tint = MaterialTheme.colorScheme.error)
+                        Icon(
+                            Icons.Filled.Warning,
+                            stringResource(R.string.error),
+                            tint = MaterialTheme.colorScheme.error
+                        )
                     }
                 },
                 keyboardActions = KeyboardActions(
