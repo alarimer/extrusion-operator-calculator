@@ -53,6 +53,14 @@ fun SelectionScreen(
         ) {
             Text(stringResource(R.string.speed_change))
         }
+        Spacer(
+            modifier = Modifier.padding(4.dp)
+        )
+        Button(
+            onClick = { navController.navigate(WeightCalculationScreen) }
+        ) {
+            Text(stringResource(R.string.weight_calculation))
+        }
     }
 }
 

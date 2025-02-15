@@ -19,10 +19,10 @@ A tool for common Extrusion Operator calculations.
 - Input the `Puller Speed`, and the `Spool Length`.
 - Outputs the `Time` in hours and minutes.
 
-### Weight Adjustment (TODO)
-#### Weight Standards Calculation (TODO)
+### Weight Calculation and Adjustment (TODO)
+#### Weight Calculation
 - Input the `Current Weight`, and the `Standard Weight`.
-- Outputs the `Current Percentage`, the `Minimum Weight`, and the `Maximum Weight`.
+- Outputs the `Percent Weight`, the `Minimum Weight`, and the `Maximum Weight`.
 
 #### Weight Adjustment for ECS (TODO)
 - Input the `Set Point`, the `Current Weight`, and the `Current Weight Percentage`.

@@ -17,6 +17,7 @@ import com.awful.extrusionoperatorcalculator.ui.RackTimeScreen
 import com.awful.extrusionoperatorcalculator.ui.SawSettingScreen
 import com.awful.extrusionoperatorcalculator.ui.SelectionScreen
 import com.awful.extrusionoperatorcalculator.ui.SpeedChangeScreen
+import com.awful.extrusionoperatorcalculator.ui.WeightCalculationScreen
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -65,6 +66,12 @@ fun EocApp(
         }
         composable<SpeedChangeScreen> {
             SpeedChangeScreen(
+                onBack = { navController.navigateUp() },
+                modifier = modifier
+            )
+        }
+        composable<WeightCalculationScreen> {
+            WeightCalculationScreen(
                 onBack = { navController.navigateUp() },
                 modifier = modifier
             )

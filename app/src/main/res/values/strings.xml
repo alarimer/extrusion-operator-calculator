@@ -1,15 +1,25 @@
 <resources>
     <string name="app_name">Extrusion Operator Calculator</string>
+    <!-- screens -->
     <string name="saw_setting">Saw Setting</string>
     <string name="rack_time">Rack Time</string>
     <string name="speed_change">Speed Change</string>
+    <string name="weight_calculation">Weight Calculation</string>
+    <!-- content description -->
     <string name="back_button">Back to Tool Selection</string>
+    <string name="select_fraction">Select fraction</string>
+    <string name="error">error</string>
+    <!-- button and label -->
     <string name="calculate">Calculate</string>
+    <string name="whole_number_only">whole number only</string>
+    <string name="decimal_number_only">decimal number only</string>
+    <!-- units of measure -->
     <string name="inches">inches</string>
     <string name="meters_per_minute">m/min</string>
     <string name="number">number</string>
     <string name="rpm">rpm</string>
-    <string name="select_fraction">Select fraction</string>
+    <string name="grams_per_meter">g/m</string>
+    <!-- input fields -->
     <string name="current_length">Current Length</string>
     <string name="desired_length">Desired Length</string>
     <string name="current_setting">Current Setting</string>
@@ -19,4 +29,6 @@
     <string name="current_feeder_speed">Current Feeder Rate</string>
     <string name="current_extruder_speed">Current Extruder Rate</string>
     <string name="target_puller_speed">Target Puller Speed</string>
+    <string name="current_weight">Current Weight</string>
+    <string name="standard_weight">Standard Weight</string>
 </resources>
