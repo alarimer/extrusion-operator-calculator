@@ -1,6 +1,7 @@
 # Extrusion Operator Calculator
 A tool for common Extrusion Operator calculations.
 
+
 ## Tools
 ### Saw Setting
 - Input the `Current Length`, the `Desired Length`, and the `Current Setting` of the saw.
@@ -29,3 +30,7 @@ A tool for common Extrusion Operator calculations.
 
 #### Weight Adjustmnet for non-ECS (TODO)
 TBD
+
+
+## Developer Information
+Alan F. Larimer, Jr. alarimer@gmail.com
