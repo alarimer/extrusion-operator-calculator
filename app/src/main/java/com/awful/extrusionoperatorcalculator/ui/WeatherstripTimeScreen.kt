@@ -3,19 +3,15 @@ package com.awful.extrusionoperatorcalculator.ui
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -58,26 +54,9 @@ fun WeatherstripTimeScreen(
         verticalArrangement = Arrangement.Center
     ) {
         // title and back button
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.back_button)
-                )
-            }
-            Spacer(modifier = Modifier.padding(24.dp))
-            Text(
-                stringResource(R.string.weatherstrip_calculation),
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Spacer(
-            modifier = Modifier.padding(16.dp)
+        ToolScreenTitleAndBackButton(
+            onBack = onBack,
+            titleText = stringResource(R.string.weatherstrip_calculation)
         )
         // puller speed
         TextField(
