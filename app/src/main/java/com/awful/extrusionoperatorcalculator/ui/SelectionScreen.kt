@@ -74,9 +74,30 @@ fun SelectionScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp",
+    name = "portrait",
+    showSystemUi = true
+)
 @Composable
-fun SelectionScreenPreview() {
+fun SelectionScreenPreviewPortrait() {
+    ExtrusionOperatorCalculatorTheme {
+        SelectionScreen(
+            navController = rememberNavController(),
+            modifier = Modifier.padding()
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp,orientation=landscape",
+    name = "landscape",
+    showSystemUi = true
+)
+@Composable
+fun SelectionScreenPreviewLandscape() {
     ExtrusionOperatorCalculatorTheme {
         SelectionScreen(
             navController = rememberNavController(),
