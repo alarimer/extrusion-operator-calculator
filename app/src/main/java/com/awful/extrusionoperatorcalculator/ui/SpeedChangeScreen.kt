@@ -6,15 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,12 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,156 +53,76 @@ fun SpeedChangeScreen(
             titleText = stringResource(R.string.speed_change)
         )
         // current puller speed
-        TextField(
-            singleLine = true,
-            value = currentPullerSpeed,
-            onValueChange = {
-                currentPullerSpeed = it
-                isErrorCPS = currentPullerSpeed.toDoubleOrNull() == null
+        EocSettingTextField(
+            initialValue = currentPullerSpeed,
+            validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+            onSettingChange = { newValue, hasError ->
+                currentPullerSpeed = newValue
+                isErrorCPS = hasError
             },
-            label = { Text(stringResource(R.string.current_puller_speed)) },
-            placeholder = { Text(stringResource(R.string.meters_per_minute)) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            supportingText = {
-                if (isErrorCPS) {
-                    Text(
-                        text = stringResource(R.string.decimal_number_only),
-                        color = Color.Red
-                    )
-                }
-            },
-            trailingIcon = {
-                if (isErrorCPS) {
-                    Icon(
-                        Icons.Filled.Warning,
-                        stringResource(R.string.error),
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
+            labelString = stringResource(R.string.current_puller_speed),
+            placeholderString = stringResource(R.string.meters_per_minute),
+            errorString = stringResource(R.string.decimal_number_only),
+            keyboardAction = ImeAction.Next
         )
         Spacer(
             modifier = Modifier.padding(4.dp)
         )
         // current feeder speed
-        TextField(
-            singleLine = true,
-            value = currentFeederSpeed,
-            onValueChange = {
-                currentFeederSpeed = it
-                isErrorCFS = currentFeederSpeed.toDoubleOrNull() == null
+        EocSettingTextField(
+            initialValue = currentFeederSpeed,
+            validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+            onSettingChange = { newValue, hasError ->
+                currentFeederSpeed = newValue
+                isErrorCFS = hasError
             },
-            label = { Text(stringResource(R.string.current_feeder_speed)) },
-            placeholder = { Text(stringResource(R.string.rpm)) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            supportingText = {
-                if (isErrorCFS) {
-                    Text(
-                        text = stringResource(R.string.decimal_number_only),
-                        color = Color.Red
-                    )
-                }
-            },
-            trailingIcon = {
-                if (isErrorCFS) {
-                    Icon(
-                        Icons.Filled.Warning,
-                        stringResource(R.string.error),
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
+            labelString = stringResource(R.string.current_feeder_speed),
+            placeholderString = stringResource(R.string.rpm),
+            errorString = stringResource(R.string.decimal_number_only),
+            keyboardAction = ImeAction.Next
         )
         Spacer(
             modifier = Modifier.padding(4.dp)
         )
         // current extruder speed
-        TextField(
-            singleLine = true,
-            value = currentExtruderSpeed,
-            onValueChange = {
-                currentExtruderSpeed = it
-                isErrorCES = currentExtruderSpeed.toDoubleOrNull() == null
+        EocSettingTextField(
+            initialValue = currentExtruderSpeed,
+            validationAction = {  newValue -> newValue.toDoubleOrNull() == null },
+            onSettingChange = { newValue, hasError ->
+                currentExtruderSpeed = newValue
+                isErrorCES = hasError
             },
-            label = { Text(stringResource(R.string.current_extruder_speed)) },
-            placeholder = { Text(stringResource(R.string.rpm)) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            ),
-            supportingText = {
-                if (isErrorCES) {
-                    Text(
-                        text = stringResource(R.string.decimal_number_only),
-                        color = Color.Red
-                    )
-                }
-            },
-            trailingIcon = {
-                if (isErrorCES) {
-                    Icon(
-                        Icons.Filled.Warning,
-                        stringResource(R.string.error),
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
+            labelString = stringResource(R.string.current_extruder_speed),
+            placeholderString = stringResource(R.string.rpm),
+            errorString = stringResource(R.string.decimal_number_only),
+            keyboardAction = ImeAction.Next
         )
         Spacer(
             modifier = Modifier.padding(4.dp)
         )
         // target puller speed
-        val kbController = LocalSoftwareKeyboardController.current
-        TextField(
-            singleLine = true,
-            value = targetPullerSpeed,
-            onValueChange = {
-                targetPullerSpeed = it
-                isErrorTPS = targetPullerSpeed.toDoubleOrNull() == null
+        EocSettingTextField(
+            initialValue = targetPullerSpeed,
+            validationAction = {  newValue -> newValue.toDoubleOrNull() == null },
+            onSettingChange = { newValue, hasError ->
+                targetPullerSpeed = newValue
+                isErrorTPS = hasError
             },
-            label = { Text(stringResource(R.string.target_puller_speed)) },
-            placeholder = { Text(stringResource(R.string.meters_per_minute)) },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done
-            ),
-            supportingText = {
-                if (isErrorTPS) {
-                    Text(
-                        text = stringResource(R.string.decimal_number_only),
-                        color = Color.Red
+            labelString = stringResource(R.string.target_puller_speed),
+            placeholderString = stringResource(R.string.meters_per_minute),
+            errorString = stringResource(R.string.decimal_number_only),
+            keyboardAction = ImeAction.Done,
+            onDoneAction = {
+                val (nfs, nes) =
+                    calculateNewSettings(
+                        currentPullerSpeed.toDouble(),
+                        currentFeederSpeed.toDouble(),
+                        currentExtruderSpeed.toDouble(),
+                        targetPullerSpeed.toDouble()
                     )
-                }
-            },
-            trailingIcon = {
-                if (isErrorTPS) {
-                    Icon(
-                        Icons.Filled.Warning,
-                        stringResource(R.string.error),
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-            },
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    kbController?.hide()
-                    val (nfs, nes) =
-                        calculateNewSettings(
-                            currentPullerSpeed.toDouble(),
-                            currentFeederSpeed.toDouble(),
-                            currentExtruderSpeed.toDouble(),
-                            targetPullerSpeed.toDouble()
-                        )
-                    newFeederSetting = nfs
-                    newExtruderSetting = nes
-                }
-            )
+                newFeederSetting = nfs
+                newExtruderSetting = nes
+            }
         )
         Spacer(
             modifier = Modifier.padding(4.dp)
