@@ -3,6 +3,7 @@ package com.awful.extrusionoperatorcalculator.ui
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -32,6 +33,7 @@ object SpeedChangeScreen
 
 @Composable
 fun SpeedChangeScreen(
+    isWideDisplay: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -43,10 +45,12 @@ fun SpeedChangeScreen(
     var isErrorCES by remember { mutableStateOf(false) }
     var targetPullerSpeed by remember { mutableStateOf("4.5") }
     var isErrorTPS by remember { mutableStateOf(false) }
-    var newFeederSetting by remember { mutableStateOf("0.0") }
-    var newExtruderSetting by remember { mutableStateOf("0.0") }
+    var newFeederSetting by remember { mutableStateOf("0.00") }
+    var newExtruderSetting by remember { mutableStateOf("0.00") }
     Column(
-        modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center
     ) {
         // title and back button
@@ -54,115 +58,240 @@ fun SpeedChangeScreen(
             onBack = onBack,
             titleText = stringResource(R.string.speed_change)
         )
-        // current puller speed
-        EocSettingTextField(
-            initialValue = currentPullerSpeed,
-            validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                currentPullerSpeed = newValue
-                isErrorCPS = hasError
-            },
-            labelString = stringResource(R.string.current_puller_speed),
-            placeholderString = stringResource(R.string.meters_per_minute),
-            errorString = stringResource(R.string.decimal_number_only),
-            keyboardAction = ImeAction.Next
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // current feeder speed
-        EocSettingTextField(
-            initialValue = currentFeederSpeed,
-            validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                currentFeederSpeed = newValue
-                isErrorCFS = hasError
-            },
-            labelString = stringResource(R.string.current_feeder_speed),
-            placeholderString = stringResource(R.string.rpm),
-            errorString = stringResource(R.string.decimal_number_only),
-            keyboardAction = ImeAction.Next
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // current extruder speed
-        EocSettingTextField(
-            initialValue = currentExtruderSpeed,
-            validationAction = {  newValue -> newValue.toDoubleOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                currentExtruderSpeed = newValue
-                isErrorCES = hasError
-            },
-            labelString = stringResource(R.string.current_extruder_speed),
-            placeholderString = stringResource(R.string.rpm),
-            errorString = stringResource(R.string.decimal_number_only),
-            keyboardAction = ImeAction.Next
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // target puller speed
-        EocSettingTextField(
-            initialValue = targetPullerSpeed,
-            validationAction = {  newValue -> newValue.toDoubleOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                targetPullerSpeed = newValue
-                isErrorTPS = hasError
-            },
-            labelString = stringResource(R.string.target_puller_speed),
-            placeholderString = stringResource(R.string.meters_per_minute),
-            errorString = stringResource(R.string.decimal_number_only),
-            keyboardAction = ImeAction.Done,
-            onDoneAction = {
-                val (nfs, nes) =
-                    calculateNewSettings(
-                        currentPullerSpeed.toDouble(),
-                        currentFeederSpeed.toDouble(),
-                        currentExtruderSpeed.toDouble(),
-                        targetPullerSpeed.toDouble()
+        if (isWideDisplay) {
+            Row(
+                modifier = modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // current puller speed
+                    EocSettingTextField(
+                        initialValue = currentPullerSpeed,
+                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            currentPullerSpeed = newValue
+                            isErrorCPS = hasError
+                        },
+                        labelString = stringResource(R.string.current_puller_speed),
+                        placeholderString = stringResource(R.string.meters_per_minute),
+                        errorString = stringResource(R.string.decimal_number_only),
+                        keyboardAction = ImeAction.Next
                     )
-                newFeederSetting = nfs
-                newExtruderSetting = nes
-            }
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // calculate button
-        Button(
-            onClick = {
-                val (nfs, nes) =
-                calculateNewSettings(
-                    currentPullerSpeed.toDouble(),
-                    currentFeederSpeed.toDouble(),
-                    currentExtruderSpeed.toDouble(),
-                    targetPullerSpeed.toDouble()
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // current feeder speed
+                    EocSettingTextField(
+                        initialValue = currentFeederSpeed,
+                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            currentFeederSpeed = newValue
+                            isErrorCFS = hasError
+                        },
+                        labelString = stringResource(R.string.current_feeder_speed),
+                        placeholderString = stringResource(R.string.rpm),
+                        errorString = stringResource(R.string.decimal_number_only),
+                        keyboardAction = ImeAction.Next
+                    )
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // current extruder speed
+                    EocSettingTextField(
+                        initialValue = currentExtruderSpeed,
+                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            currentExtruderSpeed = newValue
+                            isErrorCES = hasError
+                        },
+                        labelString = stringResource(R.string.current_extruder_speed),
+                        placeholderString = stringResource(R.string.rpm),
+                        errorString = stringResource(R.string.decimal_number_only),
+                        keyboardAction = ImeAction.Next
+                    )
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // target puller speed
+                    EocSettingTextField(
+                        initialValue = targetPullerSpeed,
+                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            targetPullerSpeed = newValue
+                            isErrorTPS = hasError
+                        },
+                        labelString = stringResource(R.string.target_puller_speed),
+                        placeholderString = stringResource(R.string.meters_per_minute),
+                        errorString = stringResource(R.string.decimal_number_only),
+                        keyboardAction = ImeAction.Done,
+                        onDoneAction = {
+                            val (nfs, nes) =
+                                calculateNewSettings(
+                                    currentPullerSpeed.toDouble(),
+                                    currentFeederSpeed.toDouble(),
+                                    currentExtruderSpeed.toDouble(),
+                                    targetPullerSpeed.toDouble()
+                                )
+                            newFeederSetting = nfs
+                            newExtruderSetting = nes
+                        }
+                    )
+                }
+                Spacer(
+                    modifier = Modifier.padding(16.dp)
                 )
-                newFeederSetting = nfs
-                newExtruderSetting = nes
-            },
-            enabled = !isErrorCPS && !isErrorCFS && !isErrorCES && !isErrorTPS,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(stringResource(R.string.calculate))
-        }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // new settings
-        Text(
-            "New Feeder Setting: $newFeederSetting",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
-        Text(
-            "New Extruder Setting: $newExtruderSetting",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // calculate button
+                    Button(
+                        onClick = {
+                            val (nfs, nes) =
+                                calculateNewSettings(
+                                    currentPullerSpeed.toDouble(),
+                                    currentFeederSpeed.toDouble(),
+                                    currentExtruderSpeed.toDouble(),
+                                    targetPullerSpeed.toDouble()
+                                )
+                            newFeederSetting = nfs
+                            newExtruderSetting = nes
+                        },
+                        enabled = !isErrorCPS && !isErrorCFS && !isErrorCES && !isErrorTPS,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(stringResource(R.string.calculate))
+                    }
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // new settings
+                    Text(
+                        "New Feeder Setting: $newFeederSetting",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    )
+                    Text(
+                        "New Extruder Setting: $newExtruderSetting",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
+            }
+        } else {    // portrait
+            // current puller speed
+            EocSettingTextField(
+                initialValue = currentPullerSpeed,
+                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    currentPullerSpeed = newValue
+                    isErrorCPS = hasError
+                },
+                labelString = stringResource(R.string.current_puller_speed),
+                placeholderString = stringResource(R.string.meters_per_minute),
+                errorString = stringResource(R.string.decimal_number_only),
+                keyboardAction = ImeAction.Next
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // current feeder speed
+            EocSettingTextField(
+                initialValue = currentFeederSpeed,
+                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    currentFeederSpeed = newValue
+                    isErrorCFS = hasError
+                },
+                labelString = stringResource(R.string.current_feeder_speed),
+                placeholderString = stringResource(R.string.rpm),
+                errorString = stringResource(R.string.decimal_number_only),
+                keyboardAction = ImeAction.Next
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // current extruder speed
+            EocSettingTextField(
+                initialValue = currentExtruderSpeed,
+                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    currentExtruderSpeed = newValue
+                    isErrorCES = hasError
+                },
+                labelString = stringResource(R.string.current_extruder_speed),
+                placeholderString = stringResource(R.string.rpm),
+                errorString = stringResource(R.string.decimal_number_only),
+                keyboardAction = ImeAction.Next
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // target puller speed
+            EocSettingTextField(
+                initialValue = targetPullerSpeed,
+                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    targetPullerSpeed = newValue
+                    isErrorTPS = hasError
+                },
+                labelString = stringResource(R.string.target_puller_speed),
+                placeholderString = stringResource(R.string.meters_per_minute),
+                errorString = stringResource(R.string.decimal_number_only),
+                keyboardAction = ImeAction.Done,
+                onDoneAction = {
+                    val (nfs, nes) =
+                        calculateNewSettings(
+                            currentPullerSpeed.toDouble(),
+                            currentFeederSpeed.toDouble(),
+                            currentExtruderSpeed.toDouble(),
+                            targetPullerSpeed.toDouble()
+                        )
+                    newFeederSetting = nfs
+                    newExtruderSetting = nes
+                }
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // calculate button
+            Button(
+                onClick = {
+                    val (nfs, nes) =
+                        calculateNewSettings(
+                            currentPullerSpeed.toDouble(),
+                            currentFeederSpeed.toDouble(),
+                            currentExtruderSpeed.toDouble(),
+                            targetPullerSpeed.toDouble()
+                        )
+                    newFeederSetting = nfs
+                    newExtruderSetting = nes
+                },
+                enabled = !isErrorCPS && !isErrorCFS && !isErrorCES && !isErrorTPS,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(stringResource(R.string.calculate))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // new settings
+            Text(
+                "New Feeder Setting: $newFeederSetting",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                "New Extruder Setting: $newExtruderSetting",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            )
+        }   // orientation
     }
 }
 
@@ -172,7 +301,7 @@ fun calculateNewSettings(
     currentFeederSetting: Double,
     currentExtruderSetting: Double,
     targetPullerSpeed: Double
-) :Pair<String, String> {
+): Pair<String, String> {
     return Pair(
         String.format(
             "%.2f",
@@ -185,11 +314,34 @@ fun calculateNewSettings(
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp",
+    name = "portrait",
+    showSystemUi = true
+)
 @Composable
-fun SpeedChangeSettingScreenPreview() {
+fun SpeedChangeSettingScreenPreviewPortrait() {
     ExtrusionOperatorCalculatorTheme {
         SpeedChangeScreen(
+            isWideDisplay = false,
+            onBack = {},
+            modifier = Modifier
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp,orientation=landscape",
+    name = "landscape",
+    showSystemUi = true
+)
+@Composable
+fun SpeedChangeSettingScreenPreviewLandscape() {
+    ExtrusionOperatorCalculatorTheme {
+        SpeedChangeScreen(
+            isWideDisplay = true,
             onBack = {},
             modifier = Modifier
         )

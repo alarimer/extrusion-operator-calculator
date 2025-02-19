@@ -7,12 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowSizeClass
 import com.awful.extrusionoperatorcalculator.ui.RackTimeScreen
 import com.awful.extrusionoperatorcalculator.ui.SawSettingScreen
 import com.awful.extrusionoperatorcalculator.ui.SelectionScreen
@@ -39,9 +42,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun EocApp(
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
     modifier: Modifier
 ) {
     val navController = rememberNavController()
+    val isWideDisplay =
+        windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.MEDIUM
+        || windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT
     NavHost(
         navController = navController,
         startDestination = SelectionScreen,
@@ -67,6 +74,7 @@ fun EocApp(
         }
         composable<SpeedChangeScreen> {
             SpeedChangeScreen(
+                isWideDisplay = isWideDisplay,
                 onBack = { navController.navigateUp() },
                 modifier = modifier
             )
