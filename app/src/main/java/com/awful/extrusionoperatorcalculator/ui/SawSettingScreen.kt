@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -45,6 +46,7 @@ fun SawSettingScreen(
     var currentSetting by remember { mutableStateOf("252") }
     var isErrorCS by remember { mutableStateOf(false) }
     var newSetting by remember { mutableStateOf("0") }
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center
@@ -103,6 +105,7 @@ fun SawSettingScreen(
             errorString = stringResource(R.string.decimal_number_only),
             keyboardAction = ImeAction.Done,
             onDoneAction = {
+                keyboardController?.hide()
                 newSetting = calculateNewSetting(
                     currentLength.toDouble(),
                     DataSource.fractionMap[currentFraction] ?: 0.0,
@@ -118,6 +121,7 @@ fun SawSettingScreen(
         // calculate button
         Button(
             onClick = {
+                keyboardController?.hide()
                 newSetting = calculateNewSetting(
                     currentLength.toDouble(),
                     DataSource.fractionMap[currentFraction] ?: 0.0,

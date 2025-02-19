@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -42,6 +43,7 @@ fun WeightCalculationScreen(
     var percentWeight by remember { mutableStateOf("95.0") }
     var minimumWeight by remember { mutableStateOf("900.0") }
     var maximumWeight by remember { mutableStateOf("1100.0") }
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center
@@ -77,6 +79,7 @@ fun WeightCalculationScreen(
             errorString = stringResource(R.string.decimal_number_only),
             keyboardAction = ImeAction.Done,
             onDoneAction = {
+                keyboardController?.hide()
                 val (pctWt, minWt, maxWt) = calculateWeightInfo(
                     currentWeight.toDouble(),
                     standardWeight.toDouble()
@@ -89,6 +92,7 @@ fun WeightCalculationScreen(
         // calculate button
         Button(
             onClick = {
+                keyboardController?.hide()
                 val (pctWt, minWt, maxWt) = calculateWeightInfo(
                     currentWeight.toDouble(),
                     standardWeight.toDouble()

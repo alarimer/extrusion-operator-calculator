@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -47,6 +48,7 @@ fun SpeedChangeScreen(
     var isErrorTPS by remember { mutableStateOf(false) }
     var newFeederSetting by remember { mutableStateOf("0.00") }
     var newExtruderSetting by remember { mutableStateOf("0.00") }
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -127,6 +129,7 @@ fun SpeedChangeScreen(
                         errorString = stringResource(R.string.decimal_number_only),
                         keyboardAction = ImeAction.Done,
                         onDoneAction = {
+                            keyboardController?.hide()
                             val (nfs, nes) =
                                 calculateNewSettings(
                                     currentPullerSpeed.toDouble(),
@@ -243,6 +246,7 @@ fun SpeedChangeScreen(
                 errorString = stringResource(R.string.decimal_number_only),
                 keyboardAction = ImeAction.Done,
                 onDoneAction = {
+                    keyboardController?.hide()
                     val (nfs, nes) =
                         calculateNewSettings(
                             currentPullerSpeed.toDouble(),
@@ -260,6 +264,7 @@ fun SpeedChangeScreen(
             // calculate button
             Button(
                 onClick = {
+                    keyboardController?.hide()
                     val (nfs, nes) =
                         calculateNewSettings(
                             currentPullerSpeed.toDouble(),
