@@ -33,4 +33,4 @@ TBD
 
 
 ## Developer Information
-Alan F. Larimer, Jr. [email](mailto:alarimer@gmail.com)
+Alan F. Larimer, Jr.
