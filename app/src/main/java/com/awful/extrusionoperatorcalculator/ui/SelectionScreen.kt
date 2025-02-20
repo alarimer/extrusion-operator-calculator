@@ -2,6 +2,7 @@ package com.awful.extrusionoperatorcalculator.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ object SelectionScreen
 
 @Composable
 fun SelectionScreen(
+    isWideDisplay: Boolean,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -34,45 +36,98 @@ fun SelectionScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = { navController.navigate(SawSettingScreen) }
-        ) {
-            Text(stringResource(R.string.saw_setting))
+        if (isWideDisplay) {
+            Row(
+                modifier = modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { navController.navigate(SawSettingScreen) }
+                    ) {
+                        Text(stringResource(R.string.saw_setting))
+                    }
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    Button(
+                        onClick = { navController.navigate(WeightCalculationScreen) }
+                    ) {
+                        Text(stringResource(R.string.weight_calculation))
+                    }
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    Button(
+                        onClick = { navController.navigate(SpeedChangeScreen) }
+                    ) {
+                        Text(stringResource(R.string.speed_change))
+                    }
+                }
+                Spacer(
+                    modifier = Modifier.padding(16.dp)
+                )
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { navController.navigate(RackTimeScreen) }
+                    ) {
+                        Text(stringResource(R.string.rack_time))
+                    }
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    Button(
+                        onClick = { navController.navigate(WeatherstripTimeScreen) }
+                    ) {
+                        Text(stringResource(R.string.weatherstrip_calculation))
+                    }
+                }
+            }
+        } else {
+            Button(
+                onClick = { navController.navigate(SawSettingScreen) }
+            ) {
+                Text(stringResource(R.string.saw_setting))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            Button(
+                onClick = { navController.navigate(WeightCalculationScreen) }
+            ) {
+                Text(stringResource(R.string.weight_calculation))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            Button(
+                onClick = { navController.navigate(SpeedChangeScreen) }
+            ) {
+                Text(stringResource(R.string.speed_change))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            Button(
+                onClick = { navController.navigate(RackTimeScreen) }
+            ) {
+                Text(stringResource(R.string.rack_time))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            Button(
+                onClick = { navController.navigate(WeatherstripTimeScreen) }
+            ) {
+                Text(stringResource(R.string.weatherstrip_calculation))
+            }
         }
         Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        Button(
-            onClick = { navController.navigate(WeightCalculationScreen) }
-        ) {
-            Text(stringResource(R.string.weight_calculation))
-        }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        Button(
-            onClick = { navController.navigate(SpeedChangeScreen) }
-        ) {
-            Text(stringResource(R.string.speed_change))
-        }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        Button(
-            onClick = { navController.navigate(RackTimeScreen) }
-        ) {
-            Text(stringResource(R.string.rack_time))
-        }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        Button(
-            onClick = { navController.navigate(WeatherstripTimeScreen) }
-        ) {
-            Text(stringResource(R.string.weatherstrip_calculation))
-        }
-        Spacer(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(32.dp)
         )
         Button(
             onClick = { navController.navigate(AboutScreen) }
@@ -92,6 +147,7 @@ fun SelectionScreen(
 fun SelectionScreenPreviewPortrait() {
     ExtrusionOperatorCalculatorTheme {
         SelectionScreen(
+            isWideDisplay = false,
             navController = rememberNavController(),
             modifier = Modifier.padding()
         )
@@ -108,6 +164,7 @@ fun SelectionScreenPreviewPortrait() {
 fun SelectionScreenPreviewLandscape() {
     ExtrusionOperatorCalculatorTheme {
         SelectionScreen(
+            isWideDisplay = true,
             navController = rememberNavController(),
             modifier = Modifier.padding()
         )

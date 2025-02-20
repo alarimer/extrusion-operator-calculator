@@ -57,6 +57,7 @@ fun EocApp(
     ) {
         composable<SelectionScreen> {
             SelectionScreen(
+                isWideDisplay = isWideDisplay,
                 navController = navController,
                 modifier = modifier
             )
