@@ -71,6 +71,14 @@ fun SelectionScreen(
         ) {
             Text(stringResource(R.string.weatherstrip_calculation))
         }
+        Spacer(
+            modifier = Modifier.padding(16.dp)
+        )
+        Button(
+            onClick = { navController.navigate(AboutScreen) }
+        ) {
+            Text(stringResource(R.string.about_label))
+        }
     }
 }
 

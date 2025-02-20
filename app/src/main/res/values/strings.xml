@@ -6,6 +6,8 @@
     <string name="speed_change">Speed Change</string>
     <string name="weight_calculation">Weight Calculation</string>
     <string name="weatherstrip_calculation">Weatherstrip Time</string>
+    <string name="about_title">About Extrusion Operator Calculator</string>
+    <string name="about_label">About</string>
     <!-- content description -->
     <string name="back_button">Back to Tool Selection</string>
     <string name="select_fraction">Select fraction</string>

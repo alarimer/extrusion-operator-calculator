@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowSizeClass
+import com.awful.extrusionoperatorcalculator.ui.AboutScreen
 import com.awful.extrusionoperatorcalculator.ui.RackTimeScreen
 import com.awful.extrusionoperatorcalculator.ui.SawSettingScreen
 import com.awful.extrusionoperatorcalculator.ui.SelectionScreen
@@ -87,6 +88,12 @@ fun EocApp(
         }
         composable<WeatherstripTimeScreen> {
             WeatherstripTimeScreen(
+                onBack = { navController.navigateUp() },
+                modifier = modifier
+            )
+        }
+        composable<AboutScreen> {
+            AboutScreen(
                 onBack = { navController.navigateUp() },
                 modifier = modifier
             )
