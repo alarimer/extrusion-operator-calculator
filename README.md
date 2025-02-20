@@ -19,17 +19,21 @@ A tool for common Extrusion Operator calculations.
 - Input the `Puller Speed`, and the `Spool Length`.
 - Outputs the `Time` in hours and minutes.
 
-### Weight Calculation and Adjustment (TODO)
+### Weight Percentage and Adjustment (TODO)
 #### Weight Calculation
 - Input the `Current Weight`, and the `Standard Weight`.
 - Outputs the `Percent Weight`, the `Minimum Weight`, and the `Maximum Weight`.
 
 #### Weight Adjustment for ECS (TODO)
 - Input the `Set Point`, the `Current Weight`, and the `Current Weight Percentage`.
-- Outputs TBD. (Likely `Set Point for 100%`, `Set Point for +1%`, `Percentage Increase for each +5 Set Point`, ...)
+- Outputs TBD. (Likely `Set Point for 100%`, `Set Point Change for 1% Weight CHhange`, `Percentage Increase for each 5 Set Point Change`, ...)
 
 #### Weight Adjustment for non-ECS (TODO)
 TBD
+
+### Material Change Shutoff (TODO)
+- Input the `Standard Weight`, the `Current Length`, and the `Tube Compound Weight`.
+- Output the `Number of Pieces` remaining when the material is shutoff.
 
 
 ## Developer Information
