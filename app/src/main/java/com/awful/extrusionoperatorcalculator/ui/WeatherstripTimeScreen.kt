@@ -119,7 +119,7 @@ fun WeatherstripTimeScreen(
         )
         // rack time
         Text(
-            "Rack time: $spoolTime",
+            "Spool time: $spoolTime",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = modifier.align(Alignment.CenterHorizontally)
