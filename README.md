@@ -17,7 +17,7 @@ A tool for common Extrusion Operator calculations.
 
 ### Weatherstrip Time
 - Input the `Puller Speed`, and the `Spool Length`.
-- Outputs the `Time` in hours and minutes.
+- Outputs the `Spool Time` in hours and minutes.
 
 ### Weight Percentage and Adjustment (TODO)
 #### Weight Calculation
@@ -26,13 +26,15 @@ A tool for common Extrusion Operator calculations.
 
 #### Weight Adjustment for ECS (TODO)
 - Input the `Set Point`, the `Current Weight`, and the `Current Weight Percentage`.
-- Outputs TBD. (Likely `Set Point for 100%`, `Set Point Change for 1% Weight CHhange`, `Percentage Increase for each 5 Set Point Change`, ...)
+- Outputs TBD. (Likely `Set Point for 100%`, `Set Point Change for 1% Weight Change`, `Percentage Increase for each 5 Set Point Change`, ...)
 
 #### Weight Adjustment for non-ECS (TODO)
-TBD
+- Input the `Extruder Rate`, the `Current Weight`, and the `Current Weight Percentage`.
+- Outputs TBD (Likely `New Feeder Rate` and the `New Extruder Rate` for 1% Weight Change`.)
 
-### Material Change Shutoff (TODO)
-- Input the `Standard Weight`, the `Current Length`, and the `Tube Compound Weight`.
+### Material Shutoff (TODO)
+*Unlikely since there is no current data is readily available for the `In-Tue Compound Weight`.*
+- Input the `Standard Weight`, the `Current Length`, and the `In-Tube Compound Weight`.
 - Output the `Number of Pieces` remaining when the material is shutoff.
 
 
