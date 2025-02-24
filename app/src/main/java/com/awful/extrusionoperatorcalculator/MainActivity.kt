@@ -64,6 +64,7 @@ fun EocApp(
         }
         composable<SawSettingScreen> {
             SawSettingScreen(
+                isWideDisplay = isWideDisplay,
                 onBack = { navController.navigateUp() },
                 modifier = modifier
             )

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -37,6 +38,7 @@ object SawSettingScreen
 
 @Composable
 fun SawSettingScreen(
+    isWideDisplay: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -65,95 +67,201 @@ fun SawSettingScreen(
             onBack = onBack,
             titleText = stringResource(R.string.saw_setting)
         )
-        // current length
-        EocSettingTextFieldWithFraction(
-            initialValue = currentLength,
-            validationAction = { newValue -> newValue.toIntOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                currentLength = newValue
-                isErrorCL = hasError
-            },
-            labelString = stringResource(R.string.current_length),
-            placeholderString = stringResource(R.string.inches),
-            errorString = stringResource(R.string.whole_number_only),
-            keyboardAction = ImeAction.Next,
-            modifier = modifier,
-            onFractionChange = { newFraction -> currentFraction = newFraction }
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // desired length
-        EocSettingTextFieldWithFraction(
-            initialValue = desiredLength,
-            validationAction = { newValue -> newValue.toIntOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                desiredLength = newValue
-                isErrorDL = hasError
-            },
-            labelString = stringResource(R.string.desired_length),
-            placeholderString = stringResource(R.string.inches),
-            errorString = stringResource(R.string.whole_number_only),
-            keyboardAction = ImeAction.Next,
-            modifier = modifier,
-            onFractionChange = { newFraction -> desiredFraction = newFraction }
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // current setting
-        EocSettingTextField(
-            initialValue = currentSetting,
-            validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                currentSetting = newValue
-                isErrorCS = hasError
-            },
-            labelString = stringResource(R.string.current_setting),
-            placeholderString = stringResource(R.string.inches),
-            errorString = stringResource(R.string.decimal_number_only),
-            keyboardAction = ImeAction.Done,
-            onDoneAction = {
-                keyboardController?.hide()
-                newSetting = calculateNewSetting(
-                    currentLength.toDouble(),
-                    DataSource.fractionMap[currentFraction] ?: 0.0,
-                    desiredLength.toDouble(),
-                    DataSource.fractionMap[desiredFraction] ?: 0.0,
-                    currentSetting.toDouble()
+        if (isWideDisplay)
+        {
+            Row(
+                modifier = modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // current length
+                    EocSettingTextFieldWithFraction(
+                        initialValue = currentLength,
+                        validationAction = { newValue -> newValue.toIntOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            currentLength = newValue
+                            isErrorCL = hasError
+                        },
+                        labelString = stringResource(R.string.current_length),
+                        placeholderString = stringResource(R.string.inches),
+                        errorString = stringResource(R.string.whole_number_only),
+                        keyboardAction = ImeAction.Next,
+                        modifier = modifier,
+                        onFractionChange = { newFraction -> currentFraction = newFraction }
+                    )
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // desired length
+                    EocSettingTextFieldWithFraction(
+                        initialValue = desiredLength,
+                        validationAction = { newValue -> newValue.toIntOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            desiredLength = newValue
+                            isErrorDL = hasError
+                        },
+                        labelString = stringResource(R.string.desired_length),
+                        placeholderString = stringResource(R.string.inches),
+                        errorString = stringResource(R.string.whole_number_only),
+                        keyboardAction = ImeAction.Next,
+                        modifier = modifier,
+                        onFractionChange = { newFraction -> desiredFraction = newFraction }
+                    )
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // current setting
+                    EocSettingTextField(
+                        initialValue = currentSetting,
+                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            currentSetting = newValue
+                            isErrorCS = hasError
+                        },
+                        labelString = stringResource(R.string.current_setting),
+                        placeholderString = stringResource(R.string.inches),
+                        errorString = stringResource(R.string.decimal_number_only),
+                        keyboardAction = ImeAction.Done,
+                        onDoneAction = {
+                            keyboardController?.hide()
+                            newSetting = calculateNewSetting(
+                                currentLength.toDouble(),
+                                DataSource.fractionMap[currentFraction] ?: 0.0,
+                                desiredLength.toDouble(),
+                                DataSource.fractionMap[desiredFraction] ?: 0.0,
+                                currentSetting.toDouble()
+                            )
+                        }
+                    )
+                }
+                Spacer(
+                    modifier = Modifier.padding(16.dp)
                 )
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // calculate button
+                    Button(
+                        onClick = {
+                            keyboardController?.hide()
+                            newSetting = calculateNewSetting(
+                                currentLength.toDouble(),
+                                DataSource.fractionMap[currentFraction] ?: 0.0,
+                                desiredLength.toDouble(),
+                                DataSource.fractionMap[desiredFraction] ?: 0.0,
+                                currentSetting.toDouble()
+                            )
+                        },
+                        enabled = !isErrorCL && !isErrorDL && !isErrorCS,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(stringResource(R.string.calculate))
+                    }
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // new setting
+                    Text(
+                        "New Setting: $newSetting",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
             }
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // calculate button
-        Button(
-            onClick = {
-                keyboardController?.hide()
-                newSetting = calculateNewSetting(
-                    currentLength.toDouble(),
-                    DataSource.fractionMap[currentFraction] ?: 0.0,
-                    desiredLength.toDouble(),
-                    DataSource.fractionMap[desiredFraction] ?: 0.0,
-                    currentSetting.toDouble()
-                )
-            },
-            enabled = !isErrorCL && !isErrorDL && !isErrorCS,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(stringResource(R.string.calculate))
+        } else {
+            // current length
+            EocSettingTextFieldWithFraction(
+                initialValue = currentLength,
+                validationAction = { newValue -> newValue.toIntOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    currentLength = newValue
+                    isErrorCL = hasError
+                },
+                labelString = stringResource(R.string.current_length),
+                placeholderString = stringResource(R.string.inches),
+                errorString = stringResource(R.string.whole_number_only),
+                keyboardAction = ImeAction.Next,
+                modifier = modifier,
+                onFractionChange = { newFraction -> currentFraction = newFraction }
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // desired length
+            EocSettingTextFieldWithFraction(
+                initialValue = desiredLength,
+                validationAction = { newValue -> newValue.toIntOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    desiredLength = newValue
+                    isErrorDL = hasError
+                },
+                labelString = stringResource(R.string.desired_length),
+                placeholderString = stringResource(R.string.inches),
+                errorString = stringResource(R.string.whole_number_only),
+                keyboardAction = ImeAction.Next,
+                modifier = modifier,
+                onFractionChange = { newFraction -> desiredFraction = newFraction }
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // current setting
+            EocSettingTextField(
+                initialValue = currentSetting,
+                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    currentSetting = newValue
+                    isErrorCS = hasError
+                },
+                labelString = stringResource(R.string.current_setting),
+                placeholderString = stringResource(R.string.inches),
+                errorString = stringResource(R.string.decimal_number_only),
+                keyboardAction = ImeAction.Done,
+                onDoneAction = {
+                    keyboardController?.hide()
+                    newSetting = calculateNewSetting(
+                        currentLength.toDouble(),
+                        DataSource.fractionMap[currentFraction] ?: 0.0,
+                        desiredLength.toDouble(),
+                        DataSource.fractionMap[desiredFraction] ?: 0.0,
+                        currentSetting.toDouble()
+                    )
+                }
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // calculate button
+            Button(
+                onClick = {
+                    keyboardController?.hide()
+                    newSetting = calculateNewSetting(
+                        currentLength.toDouble(),
+                        DataSource.fractionMap[currentFraction] ?: 0.0,
+                        desiredLength.toDouble(),
+                        DataSource.fractionMap[desiredFraction] ?: 0.0,
+                        currentSetting.toDouble()
+                    )
+                },
+                enabled = !isErrorCL && !isErrorDL && !isErrorCS,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(stringResource(R.string.calculate))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // new setting
+            Text(
+                "New Setting: $newSetting",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            )
         }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // new setting
-        Text(
-            "New Setting: $newSetting",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
     }
 }
 
@@ -171,11 +279,34 @@ fun calculateNewSetting(
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp",
+    name = "portrait",
+    showSystemUi = true
+)
 @Composable
-fun SawSettingScreenPreview() {
+fun SawSettingScreenPreviewPortrait() {
     ExtrusionOperatorCalculatorTheme {
         SawSettingScreen(
+            isWideDisplay = false,
+            onBack = {},
+            modifier = Modifier
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp,orientation=landscape",
+    name = "landscape",
+    showSystemUi = true
+)
+@Composable
+fun SawSettingScreenPreviewLandscape() {
+    ExtrusionOperatorCalculatorTheme {
+        SawSettingScreen(
+            isWideDisplay = true,
             onBack = {},
             modifier = Modifier
         )
