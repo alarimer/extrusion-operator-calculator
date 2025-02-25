@@ -158,7 +158,7 @@ fun RackTimeScreen(
                     )
                     // rack time
                     Text(
-                        "Rack time: $rackTime",
+                        "Rack Time: $rackTime",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -248,7 +248,7 @@ fun RackTimeScreen(
             )
             // rack time
             Text(
-                "Rack time: $rackTime",
+                "Rack Time: $rackTime",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
