@@ -45,7 +45,7 @@ fun AboutScreen(
             titleText = stringResource(R.string.about_title)
         )
         // information
-        Text("A tool for common Extrusion Operator calculations.")
+        Text(stringResource(R.string.app_description))
         Spacer(modifier = modifier.height(16.dp))
         val githubLink = buildAnnotatedString {
             append("See ")
