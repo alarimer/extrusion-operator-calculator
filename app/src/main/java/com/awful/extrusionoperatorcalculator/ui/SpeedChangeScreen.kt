@@ -178,13 +178,13 @@ fun SpeedChangeScreen(
                     )
                     // new settings
                     Text(
-                        "New Feeder Setting: $newFeederSetting",
+                        text = String.format(stringResource(R.string.new_feeder_setting_label), newFeederSetting),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     )
                     Text(
-                        "New Extruder Setting: $newExtruderSetting",
+                        text = String.format(stringResource(R.string.new_extruder_setting_label), newExtruderSetting),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -292,13 +292,13 @@ fun SpeedChangeScreen(
             )
             // new settings
             Text(
-                "New Feeder Setting: $newFeederSetting",
+                text = String.format(stringResource(R.string.new_feeder_setting_label), newFeederSetting),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                "New Extruder Setting: $newExtruderSetting",
+                text = String.format(stringResource(R.string.new_extruder_setting_label), newExtruderSetting),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)

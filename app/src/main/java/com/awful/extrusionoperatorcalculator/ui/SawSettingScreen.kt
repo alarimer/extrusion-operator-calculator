@@ -164,7 +164,7 @@ fun SawSettingScreen(
                     )
                     // new setting
                     Text(
-                        "New Setting: $newSetting",
+                        text = String.format(stringResource(R.string.new_setting_label), newSetting),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -256,7 +256,7 @@ fun SawSettingScreen(
             )
             // new setting
             Text(
-                "New Setting: $newSetting",
+                text = String.format(stringResource(R.string.new_setting_label), newSetting),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)

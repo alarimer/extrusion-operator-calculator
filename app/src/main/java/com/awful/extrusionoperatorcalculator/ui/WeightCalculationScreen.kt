@@ -137,19 +137,19 @@ fun WeightCalculationScreen(
                     )
                     // percentage, minimum, and maximum
                     Text(
-                        "Percent Weight: $percentWeight%",
+                        text = String.format(stringResource(R.string.percent_weight_label),percentWeight),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     )
                     Text(
-                        "Minimum Weight: $minimumWeight g/m",
+                        text = String.format(stringResource(R.string.minimum_weight_label), minimumWeight),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     )
                     Text(
-                        "Maximum Weight: $maximumWeight g/m",
+                        text = String.format(stringResource(R.string.maximum_weight_label), maximumWeight),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -215,19 +215,19 @@ fun WeightCalculationScreen(
             )
             // percentage, minimum, and maximum
             Text(
-                "Percent Weight: $percentWeight%",
+                text = String.format(stringResource(R.string.percent_weight_label),percentWeight),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                "Minimum Weight: $minimumWeight g/m",
+                text = String.format(stringResource(R.string.minimum_weight_label), minimumWeight),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                "Maximum Weight: $maximumWeight g/m",
+                text = String.format(stringResource(R.string.maximum_weight_label), maximumWeight),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)

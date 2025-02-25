@@ -17,6 +17,14 @@
     <string name="calculate">Calculate</string>
     <string name="whole_number_only">whole number only</string>
     <string name="decimal_number_only">decimal number only</string>
+    <string name="new_setting_label">New Setting: %1$s</string>
+    <string name="rack_time_label">Rack Time: %1$s</string>
+    <string name="new_feeder_setting_label">New Feeder Setting: %1$s</string>
+    <string name="new_extruder_setting_label">New Extruder Setting: %1$s</string>
+    <string name="spool_time_label">Spool Time: %1$s</string>
+    <string name="percent_weight_label">Percent Weight: %1$s%%</string>
+    <string name="minimum_weight_label">Minimum Weight: %1$s g/m</string>
+    <string name="maximum_weight_label">Maximum Weight: %1$s g/m</string>
     <!-- units of measure -->
     <string name="inches">inches</string>
     <string name="meters_per_minute">m/min</string>

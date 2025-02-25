@@ -133,7 +133,7 @@ fun WeatherstripTimeScreen(
                     )
                     // rack time
                     Text(
-                        "Spool Time: $spoolTime",
+                        text = String.format(stringResource(R.string.spool_time_label), spoolTime),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -199,7 +199,7 @@ fun WeatherstripTimeScreen(
             )
             // rack time
             Text(
-                "Spool Time: $spoolTime",
+                text = String.format(stringResource(R.string.spool_time_label), spoolTime),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
