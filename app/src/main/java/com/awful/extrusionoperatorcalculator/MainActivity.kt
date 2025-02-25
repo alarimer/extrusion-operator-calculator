@@ -84,6 +84,7 @@ fun EocApp(
         }
         composable<RackTimeScreen> {
             RackTimeScreen(
+                isWideDisplay = isWideDisplay,
                 onBack = { navController.navigateUp() },
                 modifier =  modifier
             )

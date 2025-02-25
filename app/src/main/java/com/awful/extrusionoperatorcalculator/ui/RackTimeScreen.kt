@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,7 @@ object RackTimeScreen
 
 @Composable
 fun RackTimeScreen(
+    isWideDisplay: Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -65,93 +67,193 @@ fun RackTimeScreen(
             onBack = onBack,
             titleText = stringResource(R.string.rack_time)
         )
-        Spacer(
-            modifier = Modifier.padding(16.dp)
-        )
-        // puller speed
-        EocSettingTextField(
-            initialValue = pullerSpeed,
-            validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                pullerSpeed = newValue
-                isErrorPS = hasError
-            },
-            labelString = stringResource(R.string.puller_speed),
-            placeholderString = stringResource(R.string.meters_per_minute),
-            errorString = stringResource(R.string.decimal_number_only),
-            keyboardAction = ImeAction.Next,
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // profile length
-        EocSettingTextFieldWithFraction(
-            initialValue = currentLength,
-            validationAction = { newValue -> newValue.toIntOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                currentLength = newValue
-                isErrorCL = hasError
-            },
-            labelString = stringResource(R.string.current_length),
-            placeholderString = stringResource(R.string.inches),
-            errorString = stringResource(R.string.whole_number_only),
-            keyboardAction = ImeAction.Next,
-            onFractionChange = { newFraction -> currentFraction = newFraction }
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // pieces per rack
-        EocSettingTextField(
-            initialValue = piecesPerRack,
-            validationAction = { newValue -> newValue.toIntOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                piecesPerRack = newValue
-                isErrorPPR = hasError
-            },
-            labelString = stringResource(R.string.pieces_per_rack),
-            placeholderString = stringResource(R.string.number),
-            errorString = stringResource(R.string.whole_number_only),
-            keyboardAction = ImeAction.Done,
-            onDoneAction = {
-                keyboardController?.hide()
-                rackTime = calculateRackTime(
-                    pullerSpeed.toDouble(),
-                    currentLength.toDouble(),
-                    DataSource.fractionMap[currentFraction] ?: 0.0,
-                    piecesPerRack.toDouble()
+        if (isWideDisplay) {
+            Row(
+                modifier = modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // puller speed
+                    EocSettingTextField(
+                        initialValue = pullerSpeed,
+                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            pullerSpeed = newValue
+                            isErrorPS = hasError
+                        },
+                        labelString = stringResource(R.string.puller_speed),
+                        placeholderString = stringResource(R.string.meters_per_minute),
+                        errorString = stringResource(R.string.decimal_number_only),
+                        keyboardAction = ImeAction.Next,
+                    )
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // profile length
+                    EocSettingTextFieldWithFraction(
+                        initialValue = currentLength,
+                        validationAction = { newValue -> newValue.toIntOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            currentLength = newValue
+                            isErrorCL = hasError
+                        },
+                        labelString = stringResource(R.string.current_length),
+                        placeholderString = stringResource(R.string.inches),
+                        errorString = stringResource(R.string.whole_number_only),
+                        keyboardAction = ImeAction.Next,
+                        onFractionChange = { newFraction -> currentFraction = newFraction }
+                    )
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // pieces per rack
+                    EocSettingTextField(
+                        initialValue = piecesPerRack,
+                        validationAction = { newValue -> newValue.toIntOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            piecesPerRack = newValue
+                            isErrorPPR = hasError
+                        },
+                        labelString = stringResource(R.string.pieces_per_rack),
+                        placeholderString = stringResource(R.string.number),
+                        errorString = stringResource(R.string.whole_number_only),
+                        keyboardAction = ImeAction.Done,
+                        onDoneAction = {
+                            keyboardController?.hide()
+                            rackTime = calculateRackTime(
+                                pullerSpeed.toDouble(),
+                                currentLength.toDouble(),
+                                DataSource.fractionMap[currentFraction] ?: 0.0,
+                                piecesPerRack.toDouble()
+                            )
+                        }
+                    )
+                }
+                Spacer(
+                    modifier = Modifier.padding(16.dp)
                 )
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // calculate button
+                    Button(
+                        onClick = {
+                            keyboardController?.hide()
+                            rackTime = calculateRackTime(
+                                pullerSpeed.toDouble(),
+                                currentLength.toDouble(),
+                                DataSource.fractionMap[currentFraction] ?: 0.0,
+                                piecesPerRack.toDouble()
+                            )
+                        },
+                        enabled = !isErrorPS && !isErrorCL && !isErrorPPR,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(stringResource(R.string.calculate))
+                    }
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // rack time
+                    Text(
+                        "Rack time: $rackTime",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
             }
-        )
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // calculate button
-        Button(
-            onClick = {
-                keyboardController?.hide()
-                rackTime = calculateRackTime(
-                    pullerSpeed.toDouble(),
-                    currentLength.toDouble(),
-                    DataSource.fractionMap[currentFraction] ?: 0.0,
-                    piecesPerRack.toDouble()
-                )
-            },
-            enabled = !isErrorPS && !isErrorCL && !isErrorPPR,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(stringResource(R.string.calculate))
+        } else {
+            Spacer(
+                modifier = Modifier.padding(16.dp)
+            )
+            // puller speed
+            EocSettingTextField(
+                initialValue = pullerSpeed,
+                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    pullerSpeed = newValue
+                    isErrorPS = hasError
+                },
+                labelString = stringResource(R.string.puller_speed),
+                placeholderString = stringResource(R.string.meters_per_minute),
+                errorString = stringResource(R.string.decimal_number_only),
+                keyboardAction = ImeAction.Next,
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // profile length
+            EocSettingTextFieldWithFraction(
+                initialValue = currentLength,
+                validationAction = { newValue -> newValue.toIntOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    currentLength = newValue
+                    isErrorCL = hasError
+                },
+                labelString = stringResource(R.string.current_length),
+                placeholderString = stringResource(R.string.inches),
+                errorString = stringResource(R.string.whole_number_only),
+                keyboardAction = ImeAction.Next,
+                onFractionChange = { newFraction -> currentFraction = newFraction }
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // pieces per rack
+            EocSettingTextField(
+                initialValue = piecesPerRack,
+                validationAction = { newValue -> newValue.toIntOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    piecesPerRack = newValue
+                    isErrorPPR = hasError
+                },
+                labelString = stringResource(R.string.pieces_per_rack),
+                placeholderString = stringResource(R.string.number),
+                errorString = stringResource(R.string.whole_number_only),
+                keyboardAction = ImeAction.Done,
+                onDoneAction = {
+                    keyboardController?.hide()
+                    rackTime = calculateRackTime(
+                        pullerSpeed.toDouble(),
+                        currentLength.toDouble(),
+                        DataSource.fractionMap[currentFraction] ?: 0.0,
+                        piecesPerRack.toDouble()
+                    )
+                }
+            )
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // calculate button
+            Button(
+                onClick = {
+                    keyboardController?.hide()
+                    rackTime = calculateRackTime(
+                        pullerSpeed.toDouble(),
+                        currentLength.toDouble(),
+                        DataSource.fractionMap[currentFraction] ?: 0.0,
+                        piecesPerRack.toDouble()
+                    )
+                },
+                enabled = !isErrorPS && !isErrorCL && !isErrorPPR,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(stringResource(R.string.calculate))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // rack time
+            Text(
+                "Rack time: $rackTime",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            )
         }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // rack time
-        Text(
-            "Rack time: $rackTime",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
     }
 }
 
@@ -168,11 +270,36 @@ fun calculateRackTime(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp",
+    name = "portrait",
+    showSystemUi = true
+)
+
 @Composable
-fun RackTimeScreenPreview() {
+fun RackTimeScreenPreviewPortrait() {
     ExtrusionOperatorCalculatorTheme {
         RackTimeScreen(
+            isWideDisplay = false,
+            onBack = {},
+            modifier = Modifier
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp,orientation=landscape",
+    name = "landscape",
+    showSystemUi = true
+)
+
+@Composable
+fun RackTimeScreenPreviewLandscape() {
+    ExtrusionOperatorCalculatorTheme {
+        RackTimeScreen(
+            isWideDisplay = true,
             onBack = {},
             modifier = Modifier
         )
