@@ -149,7 +149,7 @@ fun SelectionScreenPreviewPortrait() {
         SelectionScreen(
             isWideDisplay = false,
             navController = rememberNavController(),
-            modifier = Modifier.padding()
+            modifier = Modifier
         )
     }
 }
@@ -166,7 +166,7 @@ fun SelectionScreenPreviewLandscape() {
         SelectionScreen(
             isWideDisplay = true,
             navController = rememberNavController(),
-            modifier = Modifier.padding()
+            modifier = Modifier
         )
     }
 }
