@@ -92,6 +92,7 @@ fun EocApp(
         }
         composable<WeatherstripTimeScreen> {
             WeatherstripTimeScreen(
+                isWideDisplay = isWideDisplay,
                 onBack = { navController.navigateUp() },
                 modifier = modifier
             )
