@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,7 @@ object WeightCalculationScreen
 
 @Composable
 fun WeightCalculationScreen(
+    isWideDisplay:Boolean,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -62,81 +64,175 @@ fun WeightCalculationScreen(
             onBack = onBack,
             titleText = stringResource(R.string.weight_calculation)
         )
-        // current weight
-        EocSettingTextField(
-            initialValue = currentWeight,
-            validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-            onSettingChange = { newValue, hasError ->
-                currentWeight = newValue
-                isErrorCW = hasError
-            },
-            labelString = stringResource(R.string.current_weight),
-            placeholderString = stringResource(R.string.grams_per_meter),
-            errorString = stringResource(R.string.decimal_number_only),
-            keyboardAction = ImeAction.Next
-        )
-        // standard weight
-        EocSettingTextField(
-            initialValue = standardWeight,
-            validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-            onSettingChange = {  newValue, hasError ->
-                standardWeight = newValue
-                isErrorSW = hasError
-            },
-            labelString = stringResource(R.string.standard_weight),
-            placeholderString = stringResource(R.string.grams_per_meter),
-            errorString = stringResource(R.string.decimal_number_only),
-            keyboardAction = ImeAction.Done,
-            onDoneAction = {
-                keyboardController?.hide()
-                val (pctWt, minWt, maxWt) = calculateWeightInfo(
-                    currentWeight.toDouble(),
-                    standardWeight.toDouble()
+        if (isWideDisplay) {
+            Row(
+                modifier = modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // current weight
+                    EocSettingTextField(
+                        initialValue = currentWeight,
+                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                        onSettingChange = { newValue, hasError ->
+                            currentWeight = newValue
+                            isErrorCW = hasError
+                        },
+                        labelString = stringResource(R.string.current_weight),
+                        placeholderString = stringResource(R.string.grams_per_meter),
+                        errorString = stringResource(R.string.decimal_number_only),
+                        keyboardAction = ImeAction.Next
+                    )
+                    // standard weight
+                    EocSettingTextField(
+                        initialValue = standardWeight,
+                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                        onSettingChange = {  newValue, hasError ->
+                            standardWeight = newValue
+                            isErrorSW = hasError
+                        },
+                        labelString = stringResource(R.string.standard_weight),
+                        placeholderString = stringResource(R.string.grams_per_meter),
+                        errorString = stringResource(R.string.decimal_number_only),
+                        keyboardAction = ImeAction.Done,
+                        onDoneAction = {
+                            keyboardController?.hide()
+                            val (pctWt, minWt, maxWt) = calculateWeightInfo(
+                                currentWeight.toDouble(),
+                                standardWeight.toDouble()
+                            )
+                            percentWeight = pctWt
+                            minimumWeight = minWt
+                            maximumWeight = maxWt
+                        }
+                    )
+                }
+                Spacer(
+                    modifier = Modifier.padding(16.dp)
                 )
-                percentWeight = pctWt
-                minimumWeight = minWt
-                maximumWeight = maxWt
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // calculate button
+                    Button(
+                        onClick = {
+                            keyboardController?.hide()
+                            val (pctWt, minWt, maxWt) = calculateWeightInfo(
+                                currentWeight.toDouble(),
+                                standardWeight.toDouble()
+                            )
+                            percentWeight = pctWt
+                            minimumWeight = minWt
+                            maximumWeight = maxWt
+                        },
+                        enabled = !isErrorCW && !isErrorSW,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(stringResource(R.string.calculate))
+                    }
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    // percentage, minimum, and maximum
+                    Text(
+                        "Percent Weight: $percentWeight%",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    )
+                    Text(
+                        "Minimum Weight: $minimumWeight g/m",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    )
+                    Text(
+                        "Maximum Weight: $maximumWeight g/m",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
             }
-        )
-        // calculate button
-        Button(
-            onClick = {
-                keyboardController?.hide()
-                val (pctWt, minWt, maxWt) = calculateWeightInfo(
-                    currentWeight.toDouble(),
-                    standardWeight.toDouble()
-                )
-                percentWeight = pctWt
-                minimumWeight = minWt
-                maximumWeight = maxWt
-            },
-            enabled = !isErrorCW && !isErrorSW,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(stringResource(R.string.calculate))
+        } else {
+            // current weight
+            EocSettingTextField(
+                initialValue = currentWeight,
+                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                onSettingChange = { newValue, hasError ->
+                    currentWeight = newValue
+                    isErrorCW = hasError
+                },
+                labelString = stringResource(R.string.current_weight),
+                placeholderString = stringResource(R.string.grams_per_meter),
+                errorString = stringResource(R.string.decimal_number_only),
+                keyboardAction = ImeAction.Next
+            )
+            // standard weight
+            EocSettingTextField(
+                initialValue = standardWeight,
+                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
+                onSettingChange = {  newValue, hasError ->
+                    standardWeight = newValue
+                    isErrorSW = hasError
+                },
+                labelString = stringResource(R.string.standard_weight),
+                placeholderString = stringResource(R.string.grams_per_meter),
+                errorString = stringResource(R.string.decimal_number_only),
+                keyboardAction = ImeAction.Done,
+                onDoneAction = {
+                    keyboardController?.hide()
+                    val (pctWt, minWt, maxWt) = calculateWeightInfo(
+                        currentWeight.toDouble(),
+                        standardWeight.toDouble()
+                    )
+                    percentWeight = pctWt
+                    minimumWeight = minWt
+                    maximumWeight = maxWt
+                }
+            )
+            // calculate button
+            Button(
+                onClick = {
+                    keyboardController?.hide()
+                    val (pctWt, minWt, maxWt) = calculateWeightInfo(
+                        currentWeight.toDouble(),
+                        standardWeight.toDouble()
+                    )
+                    percentWeight = pctWt
+                    minimumWeight = minWt
+                    maximumWeight = maxWt
+                },
+                enabled = !isErrorCW && !isErrorSW,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text(stringResource(R.string.calculate))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            // percentage, minimum, and maximum
+            Text(
+                "Percent Weight: $percentWeight%",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                "Minimum Weight: $minimumWeight g/m",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                "Maximum Weight: $maximumWeight g/m",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = modifier.align(Alignment.CenterHorizontally)
+            )
         }
-        Spacer(
-            modifier = Modifier.padding(4.dp)
-        )
-        // percentage, minimum, and maximum
-        Text(
-            "Percent Weight: $percentWeight%",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
-        Text(
-            "Minimum Weight: $minimumWeight g/m",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
-        Text(
-            "Maximum Weight: $maximumWeight g/m",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = modifier.align(Alignment.CenterHorizontally)
-        )
     }
 }
 
@@ -152,11 +248,34 @@ fun calculateWeightInfo(
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp",
+    name = "portrait",
+    showSystemUi = true
+)
 @Composable
-fun WeightCalculationScreenPreview() {
+fun WeightCalculationScreenPreviewPortrait() {
     ExtrusionOperatorCalculatorTheme {
         WeightCalculationScreen(
+            isWideDisplay = false,
+            onBack = {},
+            modifier = Modifier
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    device = "spec:width=411dp,height=891dp,orientation=landscape",
+    name = "landscape",
+    showSystemUi = true
+)
+@Composable
+fun WeightCalculationScreenPreviewLandscape() {
+    ExtrusionOperatorCalculatorTheme {
+        WeightCalculationScreen(
+            isWideDisplay = true,
             onBack = {},
             modifier = Modifier
         )

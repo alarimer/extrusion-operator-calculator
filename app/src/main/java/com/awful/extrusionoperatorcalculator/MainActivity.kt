@@ -71,6 +71,7 @@ fun EocApp(
         }
         composable<WeightCalculationScreen> {
             WeightCalculationScreen(
+                isWideDisplay = isWideDisplay,
                 onBack = { navController.navigateUp() },
                 modifier = modifier
             )
