@@ -1,6 +1,5 @@
 package com.awful.extrusionoperatorcalculator.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -28,29 +25,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.awful.extrusionoperatorcalculator.R
-import com.awful.extrusionoperatorcalculator.data.DataSource
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
-import kotlin.time.Duration.Companion.minutes
 
 @Serializable
 object RackTimeScreen
 
 @Composable
 fun RackTimeScreen(
+    modifier: Modifier = Modifier,
+    eocViewModel: EocViewModel = viewModel(),
     isWideDisplay: Boolean,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    onBack: () -> Unit
 ) {
-    var pullerSpeed by remember { mutableStateOf("2.5") }
-    var isErrorPS by remember { mutableStateOf(false) }
-    var currentLength by remember { mutableStateOf("252") }
-    var isErrorCL by remember { mutableStateOf(false) }
-    var currentFraction: String by remember { mutableStateOf("0") }
-    var piecesPerRack by remember { mutableStateOf("60") }
-    var isErrorPPR by remember { mutableStateOf(false) }
-    var rackTime by remember { mutableStateOf("0:00 (h:mm)") }
+    val eocUiState by eocViewModel.uiState.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val localFocusManager = LocalFocusManager.current
     Column(
@@ -77,11 +67,11 @@ fun RackTimeScreen(
                 ) {
                     // puller speed
                     EocSettingTextField(
-                        initialValue = pullerSpeed,
+                        initialValue = eocUiState.currentPullerSpeed,
                         validationAction = { newValue -> newValue.toDoubleOrNull() == null },
                         onSettingChange = { newValue, hasError ->
-                            pullerSpeed = newValue
-                            isErrorPS = hasError
+                            eocUiState.currentPullerSpeed = newValue
+                            eocUiState.isErrorCPS = hasError
                         },
                         labelString = stringResource(R.string.puller_speed),
                         placeholderString = stringResource(R.string.meters_per_minute),
@@ -93,28 +83,28 @@ fun RackTimeScreen(
                     )
                     // profile length
                     EocSettingTextFieldWithFraction(
-                        initialValue = currentLength,
+                        initialValue = eocUiState.currentLength,
                         validationAction = { newValue -> newValue.toIntOrNull() == null },
                         onSettingChange = { newValue, hasError ->
-                            currentLength = newValue
-                            isErrorCL = hasError
+                            eocUiState.currentLength = newValue
+                            eocUiState.isErrorCL = hasError
                         },
                         labelString = stringResource(R.string.current_length),
                         placeholderString = stringResource(R.string.inches),
                         errorString = stringResource(R.string.whole_number_only),
                         keyboardAction = ImeAction.Next,
-                        onFractionChange = { newFraction -> currentFraction = newFraction }
+                        onFractionChange = { newFraction -> eocUiState.currentFraction = newFraction }
                     )
                     Spacer(
                         modifier = Modifier.padding(4.dp)
                     )
                     // pieces per rack
                     EocSettingTextField(
-                        initialValue = piecesPerRack,
+                        initialValue = eocUiState.piecesPerRack,
                         validationAction = { newValue -> newValue.toIntOrNull() == null },
                         onSettingChange = { newValue, hasError ->
-                            piecesPerRack = newValue
-                            isErrorPPR = hasError
+                            eocUiState.piecesPerRack = newValue
+                            eocUiState.isErrorPPR = hasError
                         },
                         labelString = stringResource(R.string.pieces_per_rack),
                         placeholderString = stringResource(R.string.number),
@@ -122,12 +112,7 @@ fun RackTimeScreen(
                         keyboardAction = ImeAction.Done,
                         onDoneAction = {
                             keyboardController?.hide()
-                            rackTime = calculateRackTime(
-                                pullerSpeed.toDouble(),
-                                currentLength.toDouble(),
-                                DataSource.fractionMap[currentFraction] ?: 0.0,
-                                piecesPerRack.toDouble()
-                            )
+                            eocViewModel.calculateRackTime()
                         }
                     )
                 }
@@ -141,14 +126,9 @@ fun RackTimeScreen(
                     Button(
                         onClick = {
                             keyboardController?.hide()
-                            rackTime = calculateRackTime(
-                                pullerSpeed.toDouble(),
-                                currentLength.toDouble(),
-                                DataSource.fractionMap[currentFraction] ?: 0.0,
-                                piecesPerRack.toDouble()
-                            )
+                            eocViewModel.calculateRackTime()
                         },
-                        enabled = !isErrorPS && !isErrorCL && !isErrorPPR,
+                        enabled = !eocUiState.isErrorCPS && !eocUiState.isErrorCL && !eocUiState.isErrorPPR,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(stringResource(R.string.calculate))
@@ -158,7 +138,7 @@ fun RackTimeScreen(
                     )
                     // rack time
                     Text(
-                        text = String.format(stringResource(R.string.rack_time_label), rackTime),
+                        text = eocUiState.rackTime,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -171,11 +151,11 @@ fun RackTimeScreen(
             )
             // puller speed
             EocSettingTextField(
-                initialValue = pullerSpeed,
+                initialValue = eocUiState.currentPullerSpeed,
                 validationAction = { newValue -> newValue.toDoubleOrNull() == null },
                 onSettingChange = { newValue, hasError ->
-                    pullerSpeed = newValue
-                    isErrorPS = hasError
+                    eocUiState.currentPullerSpeed = newValue
+                    eocUiState.isErrorCPS = hasError
                 },
                 labelString = stringResource(R.string.puller_speed),
                 placeholderString = stringResource(R.string.meters_per_minute),
@@ -187,28 +167,28 @@ fun RackTimeScreen(
             )
             // profile length
             EocSettingTextFieldWithFraction(
-                initialValue = currentLength,
+                initialValue = eocUiState.currentLength,
                 validationAction = { newValue -> newValue.toIntOrNull() == null },
                 onSettingChange = { newValue, hasError ->
-                    currentLength = newValue
-                    isErrorCL = hasError
+                    eocUiState.currentLength = newValue
+                    eocUiState.isErrorCL = hasError
                 },
                 labelString = stringResource(R.string.current_length),
                 placeholderString = stringResource(R.string.inches),
                 errorString = stringResource(R.string.whole_number_only),
                 keyboardAction = ImeAction.Next,
-                onFractionChange = { newFraction -> currentFraction = newFraction }
+                onFractionChange = { newFraction -> eocUiState.currentFraction = newFraction }
             )
             Spacer(
                 modifier = Modifier.padding(4.dp)
             )
             // pieces per rack
             EocSettingTextField(
-                initialValue = piecesPerRack,
+                initialValue = eocUiState.piecesPerRack,
                 validationAction = { newValue -> newValue.toIntOrNull() == null },
                 onSettingChange = { newValue, hasError ->
-                    piecesPerRack = newValue
-                    isErrorPPR = hasError
+                    eocUiState.piecesPerRack = newValue
+                    eocUiState.isErrorPPR = hasError
                 },
                 labelString = stringResource(R.string.pieces_per_rack),
                 placeholderString = stringResource(R.string.number),
@@ -216,12 +196,7 @@ fun RackTimeScreen(
                 keyboardAction = ImeAction.Done,
                 onDoneAction = {
                     keyboardController?.hide()
-                    rackTime = calculateRackTime(
-                        pullerSpeed.toDouble(),
-                        currentLength.toDouble(),
-                        DataSource.fractionMap[currentFraction] ?: 0.0,
-                        piecesPerRack.toDouble()
-                    )
+                    eocViewModel.calculateRackTime()
                 }
             )
             Spacer(
@@ -231,14 +206,9 @@ fun RackTimeScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    rackTime = calculateRackTime(
-                        pullerSpeed.toDouble(),
-                        currentLength.toDouble(),
-                        DataSource.fractionMap[currentFraction] ?: 0.0,
-                        piecesPerRack.toDouble()
-                    )
+                    eocViewModel.calculateRackTime()
                 },
-                enabled = !isErrorPS && !isErrorCL && !isErrorPPR,
+                enabled = !eocUiState.isErrorCPS && !eocUiState.isErrorCL && !eocUiState.isErrorPPR,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(stringResource(R.string.calculate))
@@ -248,25 +218,12 @@ fun RackTimeScreen(
             )
             // rack time
             Text(
-                text = String.format(stringResource(R.string.rack_time_label), rackTime),
+                text = eocUiState.rackTime,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
         }
-    }
-}
-
-@SuppressLint("DefaultLocale")
-fun calculateRackTime(
-    pullerSpeed: Double,
-    profileLength: Double,
-    profileFraction: Double,
-    piecesPerRack: Double
-): String {
-    val minutesPerRack = (piecesPerRack * (profileLength + profileFraction) * .0254 / pullerSpeed).minutes
-    return minutesPerRack.toComponents {
-            hours, minutes, _, _ -> "$hours:" + String.format("%02d", minutes) + " (h:mm)"
     }
 }
 
