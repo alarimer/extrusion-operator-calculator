@@ -12,8 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -40,7 +38,6 @@ fun RackTimeScreen(
     isWideDisplay: Boolean,
     onBack: () -> Unit
 ) {
-    val eocUiState by eocViewModel.uiState.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val localFocusManager = LocalFocusManager.current
     Column(
@@ -66,13 +63,12 @@ fun RackTimeScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     // puller speed
-                    EocSettingTextField(
-                        initialValue = eocUiState.currentPullerSpeed,
-                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            eocUiState.currentPullerSpeed = newValue
-                            eocUiState.isErrorCPS = hasError
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.currentPullerSpeed,
+                        onValueChange = { newValue ->
+                            eocViewModel.setCPS(newValue)
                         },
+                        isError = { eocViewModel.isErrorCPS },
                         labelString = stringResource(R.string.puller_speed),
                         placeholderString = stringResource(R.string.meters_per_minute),
                         errorString = stringResource(R.string.decimal_number_only),
@@ -82,30 +78,31 @@ fun RackTimeScreen(
                         modifier = Modifier.padding(4.dp)
                     )
                     // profile length
-                    EocSettingTextFieldWithFraction(
-                        initialValue = eocUiState.currentLength,
-                        validationAction = { newValue -> newValue.toIntOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            eocUiState.currentLength = newValue
-                            eocUiState.isErrorCL = hasError
+                    EocSettingTextFieldWithFractionVM(
+                        initialValue = eocViewModel.currentLength,
+                        onValueChange = { newValue ->
+                            eocViewModel.setCL(newValue)
                         },
+                        isError = { eocViewModel.isErrorCL },
                         labelString = stringResource(R.string.current_length),
                         placeholderString = stringResource(R.string.inches),
                         errorString = stringResource(R.string.whole_number_only),
                         keyboardAction = ImeAction.Next,
-                        onFractionChange = { newFraction -> eocUiState.currentFraction = newFraction }
+                        initialFraction = eocViewModel.currentFraction,
+                        onFractionChange = { newFraction ->
+                            eocViewModel.setCF(newFraction)
+                        }
                     )
                     Spacer(
                         modifier = Modifier.padding(4.dp)
                     )
                     // pieces per rack
-                    EocSettingTextField(
-                        initialValue = eocUiState.piecesPerRack,
-                        validationAction = { newValue -> newValue.toIntOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            eocUiState.piecesPerRack = newValue
-                            eocUiState.isErrorPPR = hasError
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.piecesPerRack,
+                        onValueChange = { newValue ->
+                            eocViewModel.setPPR(newValue)
                         },
+                        isError = { eocViewModel.isErrorPPR },
                         labelString = stringResource(R.string.pieces_per_rack),
                         placeholderString = stringResource(R.string.number),
                         errorString = stringResource(R.string.whole_number_only),
@@ -128,7 +125,7 @@ fun RackTimeScreen(
                             keyboardController?.hide()
                             eocViewModel.calculateRackTime()
                         },
-                        enabled = !eocUiState.isErrorCPS && !eocUiState.isErrorCL && !eocUiState.isErrorPPR,
+                        enabled = !eocViewModel.isErrorCPS && !eocViewModel.isErrorCL && !eocViewModel.isErrorPPR,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(stringResource(R.string.calculate))
@@ -138,7 +135,7 @@ fun RackTimeScreen(
                     )
                     // rack time
                     Text(
-                        text = eocUiState.rackTime,
+                        text = eocViewModel.rackTime,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -150,13 +147,12 @@ fun RackTimeScreen(
                 modifier = Modifier.padding(16.dp)
             )
             // puller speed
-            EocSettingTextField(
-                initialValue = eocUiState.currentPullerSpeed,
-                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    eocUiState.currentPullerSpeed = newValue
-                    eocUiState.isErrorCPS = hasError
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.currentPullerSpeed,
+                onValueChange = { newValue ->
+                    eocViewModel.setCPS(newValue)
                 },
+                isError = { eocViewModel.isErrorCPS },
                 labelString = stringResource(R.string.puller_speed),
                 placeholderString = stringResource(R.string.meters_per_minute),
                 errorString = stringResource(R.string.decimal_number_only),
@@ -166,30 +162,31 @@ fun RackTimeScreen(
                 modifier = Modifier.padding(4.dp)
             )
             // profile length
-            EocSettingTextFieldWithFraction(
-                initialValue = eocUiState.currentLength,
-                validationAction = { newValue -> newValue.toIntOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    eocUiState.currentLength = newValue
-                    eocUiState.isErrorCL = hasError
+            EocSettingTextFieldWithFractionVM(
+                initialValue = eocViewModel.currentLength,
+                onValueChange = { newValue ->
+                    eocViewModel.setCL(newValue)
                 },
+                isError = { eocViewModel.isErrorCL },
                 labelString = stringResource(R.string.current_length),
                 placeholderString = stringResource(R.string.inches),
                 errorString = stringResource(R.string.whole_number_only),
                 keyboardAction = ImeAction.Next,
-                onFractionChange = { newFraction -> eocUiState.currentFraction = newFraction }
+                initialFraction = eocViewModel.currentFraction,
+                onFractionChange = { newFraction ->
+                    eocViewModel.setCF(newFraction)
+                }
             )
             Spacer(
                 modifier = Modifier.padding(4.dp)
             )
             // pieces per rack
-            EocSettingTextField(
-                initialValue = eocUiState.piecesPerRack,
-                validationAction = { newValue -> newValue.toIntOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    eocUiState.piecesPerRack = newValue
-                    eocUiState.isErrorPPR = hasError
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.piecesPerRack,
+                onValueChange = { newValue ->
+                    eocViewModel.setPPR(newValue)
                 },
+                isError = { eocViewModel.isErrorPPR },
                 labelString = stringResource(R.string.pieces_per_rack),
                 placeholderString = stringResource(R.string.number),
                 errorString = stringResource(R.string.whole_number_only),
@@ -208,7 +205,7 @@ fun RackTimeScreen(
                     keyboardController?.hide()
                     eocViewModel.calculateRackTime()
                 },
-                enabled = !eocUiState.isErrorCPS && !eocUiState.isErrorCL && !eocUiState.isErrorPPR,
+                enabled = !eocViewModel.isErrorCPS && !eocViewModel.isErrorCL && !eocViewModel.isErrorPPR,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(stringResource(R.string.calculate))
@@ -218,7 +215,7 @@ fun RackTimeScreen(
             )
             // rack time
             Text(
-                text = eocUiState.rackTime,
+                text = eocViewModel.rackTime,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)

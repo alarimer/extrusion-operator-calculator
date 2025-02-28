@@ -140,6 +140,54 @@ fun EocSettingTextField(
 }
 
 @Composable
+fun EocSettingTextFieldVM(
+    initialValue: String,
+    onValueChange: (String) -> Unit,
+    isError: () -> Boolean,
+    labelString: String,
+    placeholderString: String,
+    errorString: String,
+    keyboardAction: ImeAction,
+    onDoneAction: () -> Unit = {}
+) {
+    val kbController = LocalSoftwareKeyboardController.current
+    TextField(
+        singleLine = true,
+        value = initialValue,
+        onValueChange = onValueChange,
+        label = { Text(labelString) },
+        placeholder = { Text(placeholderString) },
+        supportingText = {
+            if (isError()) {
+                Text(
+                    text = errorString,
+                    color = Color.Red
+                )
+            }
+        },
+        trailingIcon = {
+            if (isError()) {
+                Icon(
+                    Icons.Filled.Warning,
+                    stringResource(R.string.error),
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number,
+            imeAction = keyboardAction
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                kbController?.hide()
+                onDoneAction()
+            }
+        )
+    )
+}
+
+@Composable
 fun EocSettingTextFieldWithFraction(
     initialValue: String,
     validationAction: (String) -> Boolean,
@@ -167,6 +215,61 @@ fun EocSettingTextFieldWithFraction(
             onDoneAction = onDoneAction
         )
         Text(selectedFraction, modifier = modifier.padding(start = 16.dp))
+        Box {
+            var isExpanded by remember { mutableStateOf(false) }
+            IconButton(onClick = { isExpanded = !isExpanded } ) {
+                Icon(
+                    Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.select_fraction)
+                )
+            }
+            DropdownMenu(
+                expanded = isExpanded,
+                onDismissRequest = { isExpanded = false }
+            ) {
+                DataSource.fractionMap.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(option.key) },
+                        onClick = {
+                            selectedFraction = option.key
+                            isExpanded = false
+                            onFractionChange(selectedFraction)
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EocSettingTextFieldWithFractionVM(
+    initialValue: String,
+    onValueChange: (String) -> Unit,
+    isError: () -> Boolean,
+    labelString: String,
+    placeholderString: String,
+    errorString: String,
+    keyboardAction: ImeAction,
+    onDoneAction: () -> Unit = {},
+    initialFraction: String = "0",
+    onFractionChange: (String) -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        var selectedFraction by remember { mutableStateOf(initialFraction) }
+        EocSettingTextFieldVM(
+            initialValue = initialValue,
+            onValueChange = onValueChange,
+            isError = isError,
+            labelString = labelString,
+            placeholderString = placeholderString,
+            errorString = errorString,
+            keyboardAction = keyboardAction,
+            onDoneAction = onDoneAction
+        )
+        Text(selectedFraction, modifier = Modifier.padding(start = 16.dp))
         Box {
             var isExpanded by remember { mutableStateOf(false) }
             IconButton(onClick = { isExpanded = !isExpanded } ) {
