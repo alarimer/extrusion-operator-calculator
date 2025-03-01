@@ -60,7 +60,7 @@ class EocViewModel : ViewModel() {
         private set
     fun setCS(value: String) {
         currentSetting = value
-        isErrorCS = value.toDoubleOrNull() == null
+        isErrorCS = value.toIntOrNull() == null
     }
 
     var isErrorCS: Boolean by mutableStateOf(false)
@@ -100,7 +100,7 @@ class EocViewModel : ViewModel() {
         private set
     fun setSL(value: String) {
         spoolLength = value
-        isErrorSL = value.toDoubleOrNull() == null
+        isErrorSL = value.toIntOrNull() == null
     }
 
     var isErrorSL: Boolean by mutableStateOf(false)
