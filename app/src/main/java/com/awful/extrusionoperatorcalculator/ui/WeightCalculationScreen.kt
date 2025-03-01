@@ -1,6 +1,5 @@
 package com.awful.extrusionoperatorcalculator.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -28,6 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
@@ -37,17 +33,11 @@ object WeightCalculationScreen
 
 @Composable
 fun WeightCalculationScreen(
+    modifier: Modifier = Modifier,
+    eocViewModel: EocViewModel = viewModel(),
     isWideDisplay:Boolean,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    onBack: () -> Unit
 ) {
-    var currentWeight by remember { mutableStateOf("950.0") }
-    var isErrorCW by remember { mutableStateOf(false) }
-    var standardWeight by remember { mutableStateOf("1000") }
-    var isErrorSW by remember { mutableStateOf(false) }
-    var percentWeight by remember { mutableStateOf("95.0") }
-    var minimumWeight by remember { mutableStateOf("900.0") }
-    var maximumWeight by remember { mutableStateOf("1100.0") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val localFocusManager = LocalFocusManager.current
     Column(
@@ -73,39 +63,27 @@ fun WeightCalculationScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     // current weight
-                    EocSettingTextField(
-                        initialValue = currentWeight,
-                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            currentWeight = newValue
-                            isErrorCW = hasError
-                        },
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.currentWeight,
+                        onValueChange = { newValue -> eocViewModel.setCW(newValue) },
+                        isError = { eocViewModel.isErrorCW },
                         labelString = stringResource(R.string.current_weight),
                         placeholderString = stringResource(R.string.grams_per_meter),
                         errorString = stringResource(R.string.decimal_number_only),
                         keyboardAction = ImeAction.Next
                     )
                     // standard weight
-                    EocSettingTextField(
-                        initialValue = standardWeight,
-                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                        onSettingChange = {  newValue, hasError ->
-                            standardWeight = newValue
-                            isErrorSW = hasError
-                        },
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.standardWeight,
+                        onValueChange = { newValue -> eocViewModel.setSW(newValue) },
+                        isError = { eocViewModel.isErrorSW },
                         labelString = stringResource(R.string.standard_weight),
                         placeholderString = stringResource(R.string.grams_per_meter),
                         errorString = stringResource(R.string.decimal_number_only),
                         keyboardAction = ImeAction.Done,
                         onDoneAction = {
                             keyboardController?.hide()
-                            val (pctWt, minWt, maxWt) = calculateWeightInfo(
-                                currentWeight.toDouble(),
-                                standardWeight.toDouble()
-                            )
-                            percentWeight = pctWt
-                            minimumWeight = minWt
-                            maximumWeight = maxWt
+                            eocViewModel.calculateWeightInfo()
                         }
                     )
                 }
@@ -119,15 +97,9 @@ fun WeightCalculationScreen(
                     Button(
                         onClick = {
                             keyboardController?.hide()
-                            val (pctWt, minWt, maxWt) = calculateWeightInfo(
-                                currentWeight.toDouble(),
-                                standardWeight.toDouble()
-                            )
-                            percentWeight = pctWt
-                            minimumWeight = minWt
-                            maximumWeight = maxWt
+                            eocViewModel.calculateWeightInfo()
                         },
-                        enabled = !isErrorCW && !isErrorSW,
+                        enabled = !eocViewModel.isErrorCW && !eocViewModel.isErrorSW,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(stringResource(R.string.calculate))
@@ -137,19 +109,19 @@ fun WeightCalculationScreen(
                     )
                     // percentage, minimum, and maximum
                     Text(
-                        text = String.format(stringResource(R.string.percent_weight_label),percentWeight),
+                        text = String.format(stringResource(R.string.percent_weight_label), eocViewModel.percentWeight),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     )
                     Text(
-                        text = String.format(stringResource(R.string.minimum_weight_label), minimumWeight),
+                        text = String.format(stringResource(R.string.minimum_weight_label), eocViewModel.minimumWeight),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     )
                     Text(
-                        text = String.format(stringResource(R.string.maximum_weight_label), maximumWeight),
+                        text = String.format(stringResource(R.string.maximum_weight_label), eocViewModel.maximumWeight),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -158,54 +130,36 @@ fun WeightCalculationScreen(
             }
         } else {
             // current weight
-            EocSettingTextField(
-                initialValue = currentWeight,
-                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    currentWeight = newValue
-                    isErrorCW = hasError
-                },
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.currentWeight,
+                onValueChange = { newValue -> eocViewModel.setCW(newValue) },
+                isError = { eocViewModel.isErrorCW },
                 labelString = stringResource(R.string.current_weight),
                 placeholderString = stringResource(R.string.grams_per_meter),
                 errorString = stringResource(R.string.decimal_number_only),
                 keyboardAction = ImeAction.Next
             )
             // standard weight
-            EocSettingTextField(
-                initialValue = standardWeight,
-                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                onSettingChange = {  newValue, hasError ->
-                    standardWeight = newValue
-                    isErrorSW = hasError
-                },
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.standardWeight,
+                onValueChange = { newValue -> eocViewModel.setSW(newValue) },
+                isError = { eocViewModel.isErrorSW },
                 labelString = stringResource(R.string.standard_weight),
                 placeholderString = stringResource(R.string.grams_per_meter),
                 errorString = stringResource(R.string.decimal_number_only),
                 keyboardAction = ImeAction.Done,
                 onDoneAction = {
                     keyboardController?.hide()
-                    val (pctWt, minWt, maxWt) = calculateWeightInfo(
-                        currentWeight.toDouble(),
-                        standardWeight.toDouble()
-                    )
-                    percentWeight = pctWt
-                    minimumWeight = minWt
-                    maximumWeight = maxWt
+                    eocViewModel.calculateWeightInfo()
                 }
             )
             // calculate button
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    val (pctWt, minWt, maxWt) = calculateWeightInfo(
-                        currentWeight.toDouble(),
-                        standardWeight.toDouble()
-                    )
-                    percentWeight = pctWt
-                    minimumWeight = minWt
-                    maximumWeight = maxWt
+                    eocViewModel.calculateWeightInfo()
                 },
-                enabled = !isErrorCW && !isErrorSW,
+                enabled = !eocViewModel.isErrorCW && !eocViewModel.isErrorSW,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(stringResource(R.string.calculate))
@@ -215,37 +169,25 @@ fun WeightCalculationScreen(
             )
             // percentage, minimum, and maximum
             Text(
-                text = String.format(stringResource(R.string.percent_weight_label),percentWeight),
+                text = String.format(stringResource(R.string.percent_weight_label), eocViewModel.percentWeight),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                text = String.format(stringResource(R.string.minimum_weight_label), minimumWeight),
+                text = String.format(stringResource(R.string.minimum_weight_label), eocViewModel.minimumWeight),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                text = String.format(stringResource(R.string.maximum_weight_label), maximumWeight),
+                text = String.format(stringResource(R.string.maximum_weight_label), eocViewModel.maximumWeight),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
         }
     }
-}
-
-@SuppressLint("DefaultLocale")
-fun calculateWeightInfo(
-    currentWeight: Double,
-    standardWeight: Double
-): Triple<String, String, String> {
-    return Triple(
-        String.format("%.2f", currentWeight / standardWeight * 100),
-        String.format("%.1f", standardWeight * 0.9),
-        String.format("%.1f", standardWeight * 1.1)
-    )
 }
 
 @Preview(

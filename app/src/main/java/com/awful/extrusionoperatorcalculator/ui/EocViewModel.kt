@@ -106,6 +106,26 @@ class EocViewModel : ViewModel() {
     var isErrorSL: Boolean by mutableStateOf(false)
         private set
 
+    var currentWeight: String by mutableStateOf("30.5")
+        private set
+    fun setCW(value: String) {
+        currentWeight = value
+        isErrorCW = value.toDoubleOrNull() == null
+    }
+
+    var isErrorCW: Boolean by mutableStateOf(false)
+        private set
+
+    var standardWeight: String by mutableStateOf("30.5")
+        private set
+    fun setSW(value: String) {
+        standardWeight = value
+        isErrorSW = value.toDoubleOrNull() == null
+    }
+
+    var isErrorSW: Boolean by mutableStateOf(false)
+        private set
+
     var rackTime: String by mutableStateOf("0:00 (h:mm)")
         private set
     @SuppressLint("DefaultLocale")
@@ -133,9 +153,9 @@ class EocViewModel : ViewModel() {
         )
     }
 
-    var newFeederSetting:String by mutableStateOf("")
+    var newFeederSetting:String by mutableStateOf("0.0")
         private set
-    var newExtruderSetting: String by mutableStateOf("")
+    var newExtruderSetting: String by mutableStateOf("0.0")
         private set
     @SuppressLint("DefaultLocale")
     fun calculateSpeedSettings() {
@@ -153,7 +173,7 @@ class EocViewModel : ViewModel() {
         )
     }
 
-    var spoolTime: String by mutableStateOf("")
+    var spoolTime: String by mutableStateOf("0:00 (h:mm)")
         private  set
     @SuppressLint("DefaultLocale")
     fun calculateSpoolTime() {
@@ -161,5 +181,18 @@ class EocViewModel : ViewModel() {
         spoolTime = minutesPerSpool.toComponents {
                 hours, minutes, _, _ -> "$hours:" + String.format("%02d", minutes) + " (h:mm)"
         }
+    }
+
+    var percentWeight: String by mutableStateOf("95.0")
+        private set
+    var minimumWeight: String by mutableStateOf("900.0")
+        private set
+    var maximumWeight: String by mutableStateOf("1000.0")
+        private set
+    @SuppressLint("DefaultLocale")
+    fun calculateWeightInfo() {
+        percentWeight = String.format("%.2f", currentWeight.toDouble() / standardWeight.toDouble() * 100)
+        minimumWeight = String.format("%.1f", standardWeight.toDouble() * 0.9)
+        maximumWeight = String.format("%.1f", standardWeight.toDouble() * 1.1)
     }
 }

@@ -86,60 +86,6 @@ fun ToolScreenTitleAndBackButtonPreview() {
 }
 
 @Composable
-fun EocSettingTextField(
-    initialValue: String,
-    validationAction: (String) -> Boolean,
-    onSettingChange: (String, Boolean) -> Unit,
-    labelString: String,
-    placeholderString: String,
-    errorString: String,
-    keyboardAction: ImeAction,
-    onDoneAction: () -> Unit = {}
-) {
-    var settingValue by remember { mutableStateOf(initialValue) }
-    var isError by remember { mutableStateOf(false) }
-    val kbController = LocalSoftwareKeyboardController.current
-    TextField(
-        singleLine = true,
-        value = settingValue,
-        onValueChange = {
-            settingValue = it
-            isError = validationAction(settingValue)
-            onSettingChange(settingValue, isError)
-        },
-        label = { Text(labelString) },
-        placeholder = { Text(placeholderString) },
-        supportingText = {
-            if (isError) {
-                Text(
-                    text = errorString,
-                    color = Color.Red
-                )
-            }
-        },
-        trailingIcon = {
-            if (isError) {
-                Icon(
-                    Icons.Filled.Warning,
-                    stringResource(R.string.error),
-                    tint = MaterialTheme.colorScheme.error
-                )
-            }
-        },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Number,
-            imeAction = keyboardAction
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                kbController?.hide()
-                onDoneAction()
-            }
-        )
-    )
-}
-
-@Composable
 fun EocSettingTextFieldVM(
     initialValue: String,
     onValueChange: (String) -> Unit,
