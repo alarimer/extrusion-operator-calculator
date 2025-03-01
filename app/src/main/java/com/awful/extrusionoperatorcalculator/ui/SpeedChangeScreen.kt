@@ -1,6 +1,5 @@
 package com.awful.extrusionoperatorcalculator.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -28,6 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
@@ -37,20 +33,11 @@ object SpeedChangeScreen
 
 @Composable
 fun SpeedChangeScreen(
+    modifier: Modifier = Modifier,
+    eocViewModel: EocViewModel = viewModel(),
     isWideDisplay: Boolean,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    onBack: () -> Unit
 ) {
-    var currentPullerSpeed by remember { mutableStateOf("2.5") }
-    var isErrorCPS by remember { mutableStateOf(false) }
-    var currentFeederSpeed by remember { mutableStateOf("30.5") }
-    var isErrorCFS by remember { mutableStateOf(false) }
-    var currentExtruderSpeed by remember { mutableStateOf("15.5") }
-    var isErrorCES by remember { mutableStateOf(false) }
-    var targetPullerSpeed by remember { mutableStateOf("4.5") }
-    var isErrorTPS by remember { mutableStateOf(false) }
-    var newFeederSetting by remember { mutableStateOf("0.00") }
-    var newExtruderSetting by remember { mutableStateOf("0.00") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val localFocusManager = LocalFocusManager.current
     Column(
@@ -76,13 +63,10 @@ fun SpeedChangeScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     // current puller speed
-                    EocSettingTextField(
-                        initialValue = currentPullerSpeed,
-                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            currentPullerSpeed = newValue
-                            isErrorCPS = hasError
-                        },
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.currentPullerSpeed,
+                        onValueChange = { newValue -> eocViewModel.setCPS(newValue) },
+                        isError = { eocViewModel.isErrorCPS },
                         labelString = stringResource(R.string.current_puller_speed),
                         placeholderString = stringResource(R.string.meters_per_minute),
                         errorString = stringResource(R.string.decimal_number_only),
@@ -92,13 +76,10 @@ fun SpeedChangeScreen(
                         modifier = Modifier.padding(4.dp)
                     )
                     // current feeder speed
-                    EocSettingTextField(
-                        initialValue = currentFeederSpeed,
-                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            currentFeederSpeed = newValue
-                            isErrorCFS = hasError
-                        },
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.currentFeederSpeed,
+                        onValueChange = { newValue -> eocViewModel.setCFS(newValue) },
+                        isError = { eocViewModel.isErrorCFS },
                         labelString = stringResource(R.string.current_feeder_speed),
                         placeholderString = stringResource(R.string.rpm),
                         errorString = stringResource(R.string.decimal_number_only),
@@ -108,13 +89,10 @@ fun SpeedChangeScreen(
                         modifier = Modifier.padding(4.dp)
                     )
                     // current extruder speed
-                    EocSettingTextField(
-                        initialValue = currentExtruderSpeed,
-                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            currentExtruderSpeed = newValue
-                            isErrorCES = hasError
-                        },
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.currentExtruderSpeed,
+                        onValueChange = { newValue -> eocViewModel.setCES(newValue) },
+                        isError = { eocViewModel.isErrorCES },
                         labelString = stringResource(R.string.current_extruder_speed),
                         placeholderString = stringResource(R.string.rpm),
                         errorString = stringResource(R.string.decimal_number_only),
@@ -124,28 +102,17 @@ fun SpeedChangeScreen(
                         modifier = Modifier.padding(4.dp)
                     )
                     // target puller speed
-                    EocSettingTextField(
-                        initialValue = targetPullerSpeed,
-                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            targetPullerSpeed = newValue
-                            isErrorTPS = hasError
-                        },
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.targetPullerSpeed,
+                        onValueChange = { newValue -> eocViewModel.setTPS(newValue) },
+                        isError = { eocViewModel.isErrorTPS },
                         labelString = stringResource(R.string.target_puller_speed),
                         placeholderString = stringResource(R.string.meters_per_minute),
                         errorString = stringResource(R.string.decimal_number_only),
                         keyboardAction = ImeAction.Done,
                         onDoneAction = {
                             keyboardController?.hide()
-                            val (nfs, nes) =
-                                calculateNewSettings(
-                                    currentPullerSpeed.toDouble(),
-                                    currentFeederSpeed.toDouble(),
-                                    currentExtruderSpeed.toDouble(),
-                                    targetPullerSpeed.toDouble()
-                                )
-                            newFeederSetting = nfs
-                            newExtruderSetting = nes
+                            eocViewModel.calculateSpeedSettings()
                         }
                     )
                 }
@@ -158,17 +125,10 @@ fun SpeedChangeScreen(
                     // calculate button
                     Button(
                         onClick = {
-                            val (nfs, nes) =
-                                calculateNewSettings(
-                                    currentPullerSpeed.toDouble(),
-                                    currentFeederSpeed.toDouble(),
-                                    currentExtruderSpeed.toDouble(),
-                                    targetPullerSpeed.toDouble()
-                                )
-                            newFeederSetting = nfs
-                            newExtruderSetting = nes
+                            keyboardController?.hide()
+                            eocViewModel.calculateSpeedSettings()
                         },
-                        enabled = !isErrorCPS && !isErrorCFS && !isErrorCES && !isErrorTPS,
+                        enabled = !eocViewModel.isErrorCPS && !eocViewModel.isErrorCFS && !eocViewModel.isErrorCES && !eocViewModel.isErrorTPS,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(stringResource(R.string.calculate))
@@ -178,13 +138,19 @@ fun SpeedChangeScreen(
                     )
                     // new settings
                     Text(
-                        text = String.format(stringResource(R.string.new_feeder_setting_label), newFeederSetting),
+                        text = String.format(
+                            stringResource(R.string.new_feeder_setting_label),
+                            eocViewModel.newFeederSetting
+                        ),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     )
                     Text(
-                        text = String.format(stringResource(R.string.new_extruder_setting_label), newExtruderSetting),
+                        text = String.format(
+                            stringResource(R.string.new_extruder_setting_label),
+                            eocViewModel.newExtruderSetting
+                        ),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -193,13 +159,10 @@ fun SpeedChangeScreen(
             }
         } else {    // portrait
             // current puller speed
-            EocSettingTextField(
-                initialValue = currentPullerSpeed,
-                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    currentPullerSpeed = newValue
-                    isErrorCPS = hasError
-                },
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.currentPullerSpeed,
+                onValueChange = { newValue -> eocViewModel.setCPS(newValue) },
+                isError = { eocViewModel.isErrorCPS },
                 labelString = stringResource(R.string.current_puller_speed),
                 placeholderString = stringResource(R.string.meters_per_minute),
                 errorString = stringResource(R.string.decimal_number_only),
@@ -209,13 +172,10 @@ fun SpeedChangeScreen(
                 modifier = Modifier.padding(4.dp)
             )
             // current feeder speed
-            EocSettingTextField(
-                initialValue = currentFeederSpeed,
-                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    currentFeederSpeed = newValue
-                    isErrorCFS = hasError
-                },
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.currentFeederSpeed,
+                onValueChange = { newValue -> eocViewModel.setCFS(newValue) },
+                isError = { eocViewModel.isErrorCFS },
                 labelString = stringResource(R.string.current_feeder_speed),
                 placeholderString = stringResource(R.string.rpm),
                 errorString = stringResource(R.string.decimal_number_only),
@@ -225,13 +185,10 @@ fun SpeedChangeScreen(
                 modifier = Modifier.padding(4.dp)
             )
             // current extruder speed
-            EocSettingTextField(
-                initialValue = currentExtruderSpeed,
-                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    currentExtruderSpeed = newValue
-                    isErrorCES = hasError
-                },
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.currentExtruderSpeed,
+                onValueChange = { newValue -> eocViewModel.setCES(newValue) },
+                isError = { eocViewModel.isErrorCES },
                 labelString = stringResource(R.string.current_extruder_speed),
                 placeholderString = stringResource(R.string.rpm),
                 errorString = stringResource(R.string.decimal_number_only),
@@ -241,28 +198,17 @@ fun SpeedChangeScreen(
                 modifier = Modifier.padding(4.dp)
             )
             // target puller speed
-            EocSettingTextField(
-                initialValue = targetPullerSpeed,
-                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    targetPullerSpeed = newValue
-                    isErrorTPS = hasError
-                },
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.targetPullerSpeed,
+                onValueChange = { newValue -> eocViewModel.setTPS(newValue) },
+                isError = { eocViewModel.isErrorTPS },
                 labelString = stringResource(R.string.target_puller_speed),
                 placeholderString = stringResource(R.string.meters_per_minute),
                 errorString = stringResource(R.string.decimal_number_only),
                 keyboardAction = ImeAction.Done,
                 onDoneAction = {
                     keyboardController?.hide()
-                    val (nfs, nes) =
-                        calculateNewSettings(
-                            currentPullerSpeed.toDouble(),
-                            currentFeederSpeed.toDouble(),
-                            currentExtruderSpeed.toDouble(),
-                            targetPullerSpeed.toDouble()
-                        )
-                    newFeederSetting = nfs
-                    newExtruderSetting = nes
+                    eocViewModel.calculateSpeedSettings()
                 }
             )
             Spacer(
@@ -272,17 +218,9 @@ fun SpeedChangeScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    val (nfs, nes) =
-                        calculateNewSettings(
-                            currentPullerSpeed.toDouble(),
-                            currentFeederSpeed.toDouble(),
-                            currentExtruderSpeed.toDouble(),
-                            targetPullerSpeed.toDouble()
-                        )
-                    newFeederSetting = nfs
-                    newExtruderSetting = nes
+                    eocViewModel.calculateSpeedSettings()
                 },
-                enabled = !isErrorCPS && !isErrorCFS && !isErrorCES && !isErrorTPS,
+                enabled = !eocViewModel.isErrorCPS && !eocViewModel.isErrorCFS && !eocViewModel.isErrorCES && !eocViewModel.isErrorTPS,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(stringResource(R.string.calculate))
@@ -292,38 +230,25 @@ fun SpeedChangeScreen(
             )
             // new settings
             Text(
-                text = String.format(stringResource(R.string.new_feeder_setting_label), newFeederSetting),
+                text = String.format(
+                    stringResource(R.string.new_feeder_setting_label),
+                    eocViewModel.newFeederSetting
+                ),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                text = String.format(stringResource(R.string.new_extruder_setting_label), newExtruderSetting),
+                text = String.format(
+                    stringResource(R.string.new_extruder_setting_label),
+                    eocViewModel.newExtruderSetting
+                ),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
         }   // orientation
     }
-}
-
-@SuppressLint("DefaultLocale")
-fun calculateNewSettings(
-    currentPullerSetting: Double,
-    currentFeederSetting: Double,
-    currentExtruderSetting: Double,
-    targetPullerSpeed: Double
-): Pair<String, String> {
-    return Pair(
-        String.format(
-            "%.2f",
-            targetPullerSpeed * currentFeederSetting / currentPullerSetting
-        ),
-        String.format(
-            "%.2f",
-            targetPullerSpeed * currentExtruderSetting / currentPullerSetting
-        )
-    )
 }
 
 @Preview(

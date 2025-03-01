@@ -66,6 +66,36 @@ class EocViewModel : ViewModel() {
     var isErrorCS: Boolean by mutableStateOf(false)
         private set
 
+    var currentFeederSpeed: String by mutableStateOf("30.5")
+        private set
+    fun setCFS(value: String) {
+        currentFeederSpeed = value
+        isErrorCFS = value.toDoubleOrNull() == null
+    }
+
+    var isErrorCFS: Boolean by mutableStateOf(false)
+        private set
+
+    var currentExtruderSpeed: String by mutableStateOf("30.5")
+        private set
+    fun setCES(value: String) {
+        currentExtruderSpeed = value
+        isErrorCES = value.toDoubleOrNull() == null
+    }
+
+    var isErrorCES: Boolean by mutableStateOf(false)
+        private set
+
+    var targetPullerSpeed: String by mutableStateOf("2.5")
+        private set
+    fun setTPS(value: String) {
+        targetPullerSpeed = value
+        isErrorTPS = value.toDoubleOrNull() == null
+    }
+
+    var isErrorTPS: Boolean by mutableStateOf(false)
+        private set
+
     var rackTime: String by mutableStateOf("0:00 (h:mm)")
         private set
     @SuppressLint("DefaultLocale")
@@ -88,8 +118,28 @@ class EocViewModel : ViewModel() {
         sawSetting = String.format(
             "%.3f",
             currentSetting.toDouble()
-            * (desiredLength.toDouble() + fractionMap[desiredFraction]!!)
-            / (currentLength.toDouble() + fractionMap[currentFraction]!!)
+                * (desiredLength.toDouble() + fractionMap[desiredFraction]!!)
+                / (currentLength.toDouble() + fractionMap[currentFraction]!!)
+        )
+    }
+
+    var newFeederSetting:String by mutableStateOf("")
+        private set
+    var newExtruderSetting: String by mutableStateOf("")
+        private set
+    @SuppressLint("DefaultLocale")
+    fun calculateSpeedSettings() {
+        newFeederSetting = String.format(
+            "%.2f",
+            targetPullerSpeed.toDouble()
+                * currentFeederSpeed.toDouble()
+                / currentPullerSpeed.toDouble()
+        )
+        newExtruderSetting = String.format(
+            "%.2f",
+            targetPullerSpeed.toDouble()
+                * currentExtruderSpeed.toDouble()
+                / currentPullerSpeed.toDouble()
         )
     }
 }
