@@ -33,6 +33,20 @@ class EocViewModel : ViewModel() {
         private set
     fun setCF(value: String) { currentFraction = value }
 
+    var desiredLength: String by mutableStateOf("252")
+        private set
+    fun setDL(value: String) {
+        desiredLength = value
+        isErrorDL = value.toIntOrNull() == null
+    }
+
+    var isErrorDL: Boolean by mutableStateOf(false)
+        private set
+
+    var desiredFraction: String by mutableStateOf("0")
+        private set
+    fun setDF(value: String) { desiredFraction = value }
+
     var piecesPerRack: String by mutableStateOf("60")
         private set
     fun setPPR(value:String) {
@@ -42,18 +56,40 @@ class EocViewModel : ViewModel() {
 
     var isErrorPPR: Boolean  by mutableStateOf(false)
 
+    var currentSetting: String by mutableStateOf("252")
+        private set
+    fun setCS(value: String) {
+        currentSetting = value
+        isErrorCS = value.toDoubleOrNull() == null
+    }
+
+    var isErrorCS: Boolean by mutableStateOf(false)
+        private set
+
     var rackTime: String by mutableStateOf("0:00 (h:mm)")
         private set
     @SuppressLint("DefaultLocale")
     fun calculateRackTime() {
         val minutesPerRack = (
-            piecesPerRack.toDouble() *
-            (currentLength.toDouble() + fractionMap[currentFraction]!!)
+            piecesPerRack.toDouble()
+            * (currentLength.toDouble() + fractionMap[currentFraction]!!)
             * .0254
             / currentPullerSpeed.toDouble()
         ).minutes
         rackTime = minutesPerRack.toComponents {
             hours, minutes, _, _ -> "$hours:" + String.format("%02d", minutes) + " (h:mm)"
         }
+    }
+
+    var sawSetting: String by mutableStateOf("252")
+        private set
+    @SuppressLint("DefaultLocale")
+    fun calculateSawSetting() {
+        sawSetting = String.format(
+            "%.3f",
+            currentSetting.toDouble()
+            * (desiredLength.toDouble() + fractionMap[desiredFraction]!!)
+            / (currentLength.toDouble() + fractionMap[currentFraction]!!)
+        )
     }
 }
