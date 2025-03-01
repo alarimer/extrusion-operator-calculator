@@ -127,7 +127,7 @@ fun RackTimeScreen(
                     )
                     // rack time
                     Text(
-                        text = eocViewModel.rackTime,
+                        text = String.format(stringResource(R.string.rack_time_label), eocViewModel.rackTime),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -199,7 +199,7 @@ fun RackTimeScreen(
             )
             // rack time
             Text(
-                text = eocViewModel.rackTime,
+                text = String.format(stringResource(R.string.rack_time_label), eocViewModel.rackTime),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
