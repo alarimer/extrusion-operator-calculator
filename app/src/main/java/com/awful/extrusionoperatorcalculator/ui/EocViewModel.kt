@@ -96,6 +96,16 @@ class EocViewModel : ViewModel() {
     var isErrorTPS: Boolean by mutableStateOf(false)
         private set
 
+    var spoolLength: String by mutableStateOf("30.5")
+        private set
+    fun setSL(value: String) {
+        spoolLength = value
+        isErrorSL = value.toDoubleOrNull() == null
+    }
+
+    var isErrorSL: Boolean by mutableStateOf(false)
+        private set
+
     var rackTime: String by mutableStateOf("0:00 (h:mm)")
         private set
     @SuppressLint("DefaultLocale")
@@ -141,5 +151,15 @@ class EocViewModel : ViewModel() {
                 * currentExtruderSpeed.toDouble()
                 / currentPullerSpeed.toDouble()
         )
+    }
+
+    var spoolTime: String by mutableStateOf("")
+        private  set
+    @SuppressLint("DefaultLocale")
+    fun calculateSpoolTime() {
+        val minutesPerSpool = (spoolLength.toInt() * .3048 / currentPullerSpeed.toDouble()).minutes
+        spoolTime = minutesPerSpool.toComponents {
+                hours, minutes, _, _ -> "$hours:" + String.format("%02d", minutes) + " (h:mm)"
+        }
     }
 }

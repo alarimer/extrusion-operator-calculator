@@ -1,6 +1,5 @@
 package com.awful.extrusionoperatorcalculator.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -28,25 +23,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
-import kotlin.time.Duration.Companion.minutes
 
 @Serializable
 object WeatherstripTimeScreen
 
 @Composable
 fun WeatherstripTimeScreen(
+    modifier: Modifier = Modifier,
+    eocViewModel: EocViewModel = viewModel(),
     isWideDisplay:Boolean,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    onBack: () -> Unit
 ) {
-    var pullerSpeed by remember { mutableStateOf("2.5") }
-    var isErrorPS by remember { mutableStateOf(false) }
-    var spoolLength by remember { mutableStateOf("3500") }
-    var isErrorSL by remember { mutableStateOf(false) }
-    var spoolTime by remember { mutableStateOf("0:00 (h:mm)") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val localFocusManager = LocalFocusManager.current
     Column(
@@ -72,13 +63,10 @@ fun WeatherstripTimeScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     // puller speed
-                    EocSettingTextField(
-                        initialValue = pullerSpeed,
-                        validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            pullerSpeed = newValue
-                            isErrorPS = hasError
-                        },
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.currentPullerSpeed,
+                        onValueChange = { newValue -> eocViewModel.setCPS(newValue) },
+                        isError = { eocViewModel.isErrorCPS },
                         labelString = stringResource(R.string.puller_speed),
                         placeholderString = stringResource(R.string.meters_per_minute),
                         errorString = stringResource(R.string.decimal_number_only),
@@ -88,23 +76,17 @@ fun WeatherstripTimeScreen(
                         modifier = Modifier.padding(4.dp)
                     )
                     // spool length
-                    EocSettingTextField(
-                        initialValue = spoolLength,
-                        validationAction = { newValue -> newValue.toIntOrNull() == null },
-                        onSettingChange = { newValue, hasError ->
-                            spoolLength = newValue
-                            isErrorSL = hasError
-                        },
+                    EocSettingTextFieldVM(
+                        initialValue = eocViewModel.spoolLength,
+                        onValueChange = { newValue -> eocViewModel.setSL(newValue) },
+                        isError = { eocViewModel.isErrorSL },
                         labelString = stringResource(R.string.spool_length),
                         placeholderString = stringResource(R.string.feet),
                         errorString = stringResource(R.string.whole_number_only),
                         keyboardAction = ImeAction.Done,
                         onDoneAction = {
                             keyboardController?.hide()
-                            spoolTime = calculateSpoolTime(
-                                pullerSpeed.toDouble(),
-                                spoolLength.toInt()
-                            )
+                            eocViewModel.calculateSpoolTime()
                         }
                     )
                 }
@@ -118,12 +100,9 @@ fun WeatherstripTimeScreen(
                     Button(
                         onClick = {
                             keyboardController?.hide()
-                            spoolTime = calculateSpoolTime(
-                                pullerSpeed.toDouble(),
-                                spoolLength.toInt()
-                            )
+                            eocViewModel.calculateSpoolTime()
                         },
-                        enabled = !isErrorPS && !isErrorSL,
+                        enabled = !eocViewModel.isErrorCPS && !eocViewModel.isErrorSL,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(stringResource(R.string.calculate))
@@ -133,7 +112,7 @@ fun WeatherstripTimeScreen(
                     )
                     // rack time
                     Text(
-                        text = String.format(stringResource(R.string.spool_time_label), spoolTime),
+                        text = String.format(stringResource(R.string.spool_time_label), eocViewModel.spoolTime),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -142,13 +121,10 @@ fun WeatherstripTimeScreen(
             }
         } else {
             // puller speed
-            EocSettingTextField(
-                initialValue = pullerSpeed,
-                validationAction = { newValue -> newValue.toDoubleOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    pullerSpeed = newValue
-                    isErrorPS = hasError
-                },
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.currentPullerSpeed,
+                onValueChange = { newValue -> eocViewModel.setCPS(newValue) },
+                isError = { eocViewModel.isErrorCPS },
                 labelString = stringResource(R.string.puller_speed),
                 placeholderString = stringResource(R.string.meters_per_minute),
                 errorString = stringResource(R.string.decimal_number_only),
@@ -158,23 +134,17 @@ fun WeatherstripTimeScreen(
                 modifier = Modifier.padding(4.dp)
             )
             // spool length
-            EocSettingTextField(
-                initialValue = spoolLength,
-                validationAction = { newValue -> newValue.toIntOrNull() == null },
-                onSettingChange = { newValue, hasError ->
-                    spoolLength = newValue
-                    isErrorSL = hasError
-                },
+            EocSettingTextFieldVM(
+                initialValue = eocViewModel.spoolLength,
+                onValueChange = { newValue -> eocViewModel.setSL(newValue) },
+                isError = { eocViewModel.isErrorSL },
                 labelString = stringResource(R.string.spool_length),
                 placeholderString = stringResource(R.string.feet),
                 errorString = stringResource(R.string.whole_number_only),
                 keyboardAction = ImeAction.Done,
                 onDoneAction = {
                     keyboardController?.hide()
-                    spoolTime = calculateSpoolTime(
-                        pullerSpeed.toDouble(),
-                        spoolLength.toInt()
-                    )
+                    eocViewModel.calculateSpoolTime()
                 }
             )
             Spacer(
@@ -184,12 +154,9 @@ fun WeatherstripTimeScreen(
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    spoolTime = calculateSpoolTime(
-                        pullerSpeed.toDouble(),
-                        spoolLength.toInt()
-                    )
+                    eocViewModel.calculateSpoolTime()
                 },
-                enabled = !isErrorPS && !isErrorSL,
+                enabled = !eocViewModel.isErrorCPS && !eocViewModel.isErrorSL,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(stringResource(R.string.calculate))
@@ -199,23 +166,12 @@ fun WeatherstripTimeScreen(
             )
             // rack time
             Text(
-                text = String.format(stringResource(R.string.spool_time_label), spoolTime),
+                text = String.format(stringResource(R.string.spool_time_label), eocViewModel.spoolTime),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
         }
-    }
-}
-
-@SuppressLint("DefaultLocale")
-fun calculateSpoolTime(
-    pullerSpeed: Double,
-    spoolLength: Int
-): String {
-    val minutesPerRack = (spoolLength * .3048 / pullerSpeed).minutes
-    return minutesPerRack.toComponents {
-            hours, minutes, _, _ -> "$hours:" + String.format("%02d", minutes) + " (h:mm)"
     }
 }
 
