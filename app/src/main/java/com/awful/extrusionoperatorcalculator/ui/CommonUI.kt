@@ -188,61 +188,6 @@ fun EocSettingTextFieldVM(
 }
 
 @Composable
-fun EocSettingTextFieldWithFraction(
-    initialValue: String,
-    validationAction: (String) -> Boolean,
-    onSettingChange: (String, Boolean) -> Unit,
-    labelString: String,
-    placeholderString: String,
-    errorString: String,
-    keyboardAction: ImeAction,
-    modifier: Modifier = Modifier,
-    onDoneAction: () -> Unit = {},
-    onFractionChange: (String) -> Unit = {}
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        var selectedFraction by remember { mutableStateOf("0") }
-        EocSettingTextField(
-            initialValue = initialValue,
-            validationAction = validationAction,
-            onSettingChange = onSettingChange,
-            labelString = labelString,
-            placeholderString = placeholderString,
-            errorString = errorString,
-            keyboardAction = keyboardAction,
-            onDoneAction = onDoneAction
-        )
-        Text(selectedFraction, modifier = modifier.padding(start = 16.dp))
-        Box {
-            var isExpanded by remember { mutableStateOf(false) }
-            IconButton(onClick = { isExpanded = !isExpanded } ) {
-                Icon(
-                    Icons.Default.MoreVert,
-                    contentDescription = stringResource(R.string.select_fraction)
-                )
-            }
-            DropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = { isExpanded = false }
-            ) {
-                DataSource.fractionMap.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option.key) },
-                        onClick = {
-                            selectedFraction = option.key
-                            isExpanded = false
-                            onFractionChange(selectedFraction)
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
 fun EocSettingTextFieldWithFractionVM(
     initialValue: String,
     onValueChange: (String) -> Unit,
