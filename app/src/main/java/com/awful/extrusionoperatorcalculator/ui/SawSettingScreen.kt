@@ -66,9 +66,7 @@ fun SawSettingScreen(
                     // current length
                     EocSettingTextFieldWithFractionVM(
                         initialValue = eocViewModel.currentLength,
-                        onValueChange = { newValue ->
-                            eocViewModel.setCL(newValue)
-                        },
+                        onValueChange = { newValue -> eocViewModel.setCL(newValue) },
                         isError = { eocViewModel.isErrorCL },
                         labelString = stringResource(R.string.current_length),
                         placeholderString = stringResource(R.string.inches),
@@ -82,18 +80,14 @@ fun SawSettingScreen(
                     // desired length
                     EocSettingTextFieldWithFractionVM(
                         initialValue = eocViewModel.desiredLength,
-                        onValueChange = { newValue ->
-                            eocViewModel.setDL(newValue)
-                        },
+                        onValueChange = { newValue -> eocViewModel.setDL(newValue) },
                         isError = { eocViewModel.isErrorDL },
                         labelString = stringResource(R.string.desired_length),
                         placeholderString = stringResource(R.string.inches),
                         errorString = stringResource(R.string.whole_number_only),
                         keyboardAction = ImeAction.Next,
                         initialFraction = eocViewModel.desiredFraction,
-                        onFractionChange = { newFraction ->
-                            eocViewModel.setDF(newFraction)
-                        }
+                        onFractionChange = { newFraction -> eocViewModel.setDF(newFraction) }
                     )
                     Spacer(
                         modifier = Modifier.padding(4.dp)
@@ -101,9 +95,7 @@ fun SawSettingScreen(
                     // current setting
                     EocSettingTextFieldVM(
                         initialValue = eocViewModel.currentSetting,
-                        onValueChange = { newValue ->
-                            eocViewModel.setCS(newValue)
-                        },
+                        onValueChange = { newValue -> eocViewModel.setCS(newValue) },
                         isError = { eocViewModel.isErrorCS },
                         labelString = stringResource(R.string.current_setting),
                         placeholderString = stringResource(R.string.inches),
@@ -148,9 +140,7 @@ fun SawSettingScreen(
             // current length
             EocSettingTextFieldWithFractionVM(
                 initialValue = eocViewModel.currentLength,
-                onValueChange = { newValue ->
-                    eocViewModel.setCL(newValue)
-                },
+                onValueChange = { newValue -> eocViewModel.setCL(newValue) },
                 isError = { eocViewModel.isErrorCL },
                 labelString = stringResource(R.string.current_length),
                 placeholderString = stringResource(R.string.inches),
@@ -164,18 +154,14 @@ fun SawSettingScreen(
             // desired length
             EocSettingTextFieldWithFractionVM(
                 initialValue = eocViewModel.desiredLength,
-                onValueChange = { newValue ->
-                    eocViewModel.setDL(newValue)
-                },
+                onValueChange = { newValue -> eocViewModel.setDL(newValue) },
                 isError = { eocViewModel.isErrorDL },
                 labelString = stringResource(R.string.desired_length),
                 placeholderString = stringResource(R.string.inches),
                 errorString = stringResource(R.string.whole_number_only),
                 keyboardAction = ImeAction.Next,
                 initialFraction = eocViewModel.desiredFraction,
-                onFractionChange = { newFraction ->
-                    eocViewModel.setDF(newFraction)
-                }
+                onFractionChange = { newFraction -> eocViewModel.setDF(newFraction) }
             )
             Spacer(
                 modifier = Modifier.padding(4.dp)
@@ -183,9 +169,7 @@ fun SawSettingScreen(
             // current setting
             EocSettingTextFieldVM(
                 initialValue = eocViewModel.currentSetting,
-                onValueChange = { newValue ->
-                    eocViewModel.setCS(newValue)
-                },
+                onValueChange = { newValue -> eocViewModel.setCS(newValue) },
                 isError = { eocViewModel.isErrorCS },
                 labelString = stringResource(R.string.current_setting),
                 placeholderString = stringResource(R.string.inches),
