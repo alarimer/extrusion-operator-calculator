@@ -54,8 +54,7 @@ fun SawSettingScreen(
             onBack = onBack,
             titleText = stringResource(R.string.saw_setting)
         )
-        if (isWideDisplay)
-        {
+        if (isWideDisplay) {
             Row(
                 modifier = modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center
@@ -129,7 +128,10 @@ fun SawSettingScreen(
                     )
                     // new setting
                     Text(
-                        text = String.format(stringResource(R.string.new_setting_label), eocViewModel.sawSetting),
+                        text = String.format(
+                            stringResource(R.string.new_setting_label),
+                            eocViewModel.sawSetting
+                        ),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -199,7 +201,10 @@ fun SawSettingScreen(
             )
             // new setting
             Text(
-                text = String.format(stringResource(R.string.new_setting_label), eocViewModel.sawSetting),
+                text = String.format(
+                    stringResource(R.string.new_setting_label),
+                    eocViewModel.sawSetting
+                ),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)

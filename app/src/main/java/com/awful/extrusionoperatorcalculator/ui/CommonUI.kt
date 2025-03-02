@@ -163,7 +163,7 @@ fun EocSettingTextFieldWithFractionVM(
         Text(selectedFraction, modifier = Modifier.padding(start = 16.dp))
         Box {
             var isExpanded by remember { mutableStateOf(false) }
-            IconButton(onClick = { isExpanded = !isExpanded } ) {
+            IconButton(onClick = { isExpanded = !isExpanded }) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = stringResource(R.string.select_fraction)

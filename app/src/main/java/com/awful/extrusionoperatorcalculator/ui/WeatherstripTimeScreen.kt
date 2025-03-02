@@ -35,7 +35,7 @@ object WeatherstripTimeScreen
 fun WeatherstripTimeScreen(
     modifier: Modifier = Modifier,
     eocViewModel: EocViewModel = viewModel(),
-    isWideDisplay:Boolean,
+    isWideDisplay: Boolean,
     onBack: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -56,7 +56,7 @@ fun WeatherstripTimeScreen(
         )
         if (isWideDisplay) {
             Row(
-                modifier =  modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 Column(
@@ -112,7 +112,10 @@ fun WeatherstripTimeScreen(
                     )
                     // rack time
                     Text(
-                        text = String.format(stringResource(R.string.spool_time_label), eocViewModel.spoolTime),
+                        text = String.format(
+                            stringResource(R.string.spool_time_label),
+                            eocViewModel.spoolTime
+                        ),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -166,7 +169,10 @@ fun WeatherstripTimeScreen(
             )
             // rack time
             Text(
-                text = String.format(stringResource(R.string.spool_time_label), eocViewModel.spoolTime),
+                text = String.format(
+                    stringResource(R.string.spool_time_label),
+                    eocViewModel.spoolTime
+                ),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)

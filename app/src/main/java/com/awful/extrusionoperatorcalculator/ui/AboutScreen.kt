@@ -67,7 +67,7 @@ fun AboutScreen(
     showBackground = true
 )
 @Composable
-fun AboutScreenPreview(){
+fun AboutScreenPreview() {
     ExtrusionOperatorCalculatorTheme {
         AboutScreen(
             onBack = {}

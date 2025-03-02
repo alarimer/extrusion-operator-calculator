@@ -49,7 +49,7 @@ fun EocApp(
     val navController = rememberNavController()
     val isWideDisplay =
         windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.MEDIUM
-        || windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT
+                || windowSizeClass.windowHeightSizeClass == WindowHeightSizeClass.COMPACT
     NavHost(
         navController = navController,
         startDestination = SelectionScreen,
@@ -87,7 +87,7 @@ fun EocApp(
             RackTimeScreen(
                 isWideDisplay = isWideDisplay,
                 onBack = { navController.navigateUp() },
-                modifier =  modifier
+                modifier = modifier
             )
         }
         composable<WeatherstripTimeScreen> {

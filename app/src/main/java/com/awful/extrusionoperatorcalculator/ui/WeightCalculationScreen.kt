@@ -35,7 +35,7 @@ object WeightCalculationScreen
 fun WeightCalculationScreen(
     modifier: Modifier = Modifier,
     eocViewModel: EocViewModel = viewModel(),
-    isWideDisplay:Boolean,
+    isWideDisplay: Boolean,
     onBack: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -109,19 +109,28 @@ fun WeightCalculationScreen(
                     )
                     // percentage, minimum, and maximum
                     Text(
-                        text = String.format(stringResource(R.string.percent_weight_label), eocViewModel.percentWeight),
+                        text = String.format(
+                            stringResource(R.string.percent_weight_label),
+                            eocViewModel.percentWeight
+                        ),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     )
                     Text(
-                        text = String.format(stringResource(R.string.minimum_weight_label), eocViewModel.minimumWeight),
+                        text = String.format(
+                            stringResource(R.string.minimum_weight_label),
+                            eocViewModel.minimumWeight
+                        ),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
                     )
                     Text(
-                        text = String.format(stringResource(R.string.maximum_weight_label), eocViewModel.maximumWeight),
+                        text = String.format(
+                            stringResource(R.string.maximum_weight_label),
+                            eocViewModel.maximumWeight
+                        ),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = modifier.align(Alignment.CenterHorizontally)
@@ -169,19 +178,28 @@ fun WeightCalculationScreen(
             )
             // percentage, minimum, and maximum
             Text(
-                text = String.format(stringResource(R.string.percent_weight_label), eocViewModel.percentWeight),
+                text = String.format(
+                    stringResource(R.string.percent_weight_label),
+                    eocViewModel.percentWeight
+                ),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                text = String.format(stringResource(R.string.minimum_weight_label), eocViewModel.minimumWeight),
+                text = String.format(
+                    stringResource(R.string.minimum_weight_label),
+                    eocViewModel.minimumWeight
+                ),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                text = String.format(stringResource(R.string.maximum_weight_label), eocViewModel.maximumWeight),
+                text = String.format(
+                    stringResource(R.string.maximum_weight_label),
+                    eocViewModel.maximumWeight
+                ),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = modifier.align(Alignment.CenterHorizontally)
