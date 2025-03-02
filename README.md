@@ -33,7 +33,7 @@ A tool for common Extrusion Operator calculations.
 - Outputs TBD (Likely `New Feeder Rate` and the `New Extruder Rate` for 1% Weight Change`.)
 
 ### Material Shutoff (TODO)
-*Unlikely since there is no current data is readily available for the `In-Tue Compound Weight`.*
+*Unlikely since there is no current data readily available for the `In-Tube Compound Weight`.*
 - Input the `Standard Weight`, the `Current Length`, and the `In-Tube Compound Weight`.
 - Output the `Number of Pieces` remaining when the material is shutoff.
 
