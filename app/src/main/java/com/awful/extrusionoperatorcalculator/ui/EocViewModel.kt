@@ -71,7 +71,7 @@ class EocViewModel : ViewModel() {
 
     fun setCS(value: String) {
         currentSetting = value
-        isErrorCS = value.toIntOrNull() == null
+        isErrorCS = value.toDoubleOrNull() == null
     }
 
     var isErrorCS: Boolean by mutableStateOf(false)
@@ -110,7 +110,7 @@ class EocViewModel : ViewModel() {
     var isErrorTPS: Boolean by mutableStateOf(false)
         private set
 
-    var spoolLength: String by mutableStateOf("30.5")
+    var spoolLength: String by mutableStateOf("3500")
         private set
 
     fun setSL(value: String) {
@@ -121,7 +121,7 @@ class EocViewModel : ViewModel() {
     var isErrorSL: Boolean by mutableStateOf(false)
         private set
 
-    var currentWeight: String by mutableStateOf("30.5")
+    var currentWeight: String by mutableStateOf("950.0")
         private set
 
     fun setCW(value: String) {
@@ -132,7 +132,7 @@ class EocViewModel : ViewModel() {
     var isErrorCW: Boolean by mutableStateOf(false)
         private set
 
-    var standardWeight: String by mutableStateOf("30.5")
+    var standardWeight: String by mutableStateOf("1000.0")
         private set
 
     fun setSW(value: String) {
@@ -204,11 +204,11 @@ class EocViewModel : ViewModel() {
         }
     }
 
-    var percentWeight: String by mutableStateOf("95.0")
+    var percentWeight: String by mutableStateOf("0.0")
         private set
-    var minimumWeight: String by mutableStateOf("900.0")
+    var minimumWeight: String by mutableStateOf("0.0")
         private set
-    var maximumWeight: String by mutableStateOf("1000.0")
+    var maximumWeight: String by mutableStateOf("0.0")
         private set
 
     @SuppressLint("DefaultLocale")
