@@ -146,6 +146,17 @@ class EocViewModel : ViewModel() {
     var rackTime: String by mutableStateOf("0:00 (h:mm)")
         private set
 
+    var currentSetPoint: String by mutableStateOf("1000")
+        private set
+
+    fun setCSP(value: String) {
+        currentSetPoint = value
+        isErrorCSP = value.toIntOrNull() == null
+    }
+
+    var isErrorCSP: Boolean by mutableStateOf(false)
+        private set
+
     @SuppressLint("DefaultLocale")
     fun calculateRackTime() {
         val minutesPerRack = (
@@ -217,5 +228,16 @@ class EocViewModel : ViewModel() {
             String.format("%.2f", currentWeight.toDouble() / standardWeight.toDouble() * 100)
         minimumWeight = String.format("%.1f", standardWeight.toDouble() * 0.9)
         maximumWeight = String.format("%.1f", standardWeight.toDouble() * 1.1)
+    }
+
+    var weightChangeBySetChange:String by mutableStateOf("0.0")
+        private set
+
+    @SuppressLint("DefaultLocale")
+    fun calculateWeightChangeBySetChange() {
+        weightChangeBySetChange = String.format(
+            "%0.2f",
+            5 / currentSetPoint.toInt() * currentWeight.toDouble()
+        )
     }
 }

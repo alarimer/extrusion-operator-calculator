@@ -7,6 +7,7 @@
     <string name="speed_change">Speed Change</string>
     <string name="weight_calculation">Weight Calculation</string>
     <string name="weatherstrip_calculation">Weatherstrip Time</string>
+    <string name="weight_change_ecs">Weight Change ECS</string>
     <string name="about_title">About Extrusion Operator Calculator</string>
     <string name="about_label">About</string>
     <!-- content description -->
@@ -25,6 +26,8 @@
     <string name="percent_weight_label">Percent Weight: %1$s%%</string>
     <string name="minimum_weight_label">Minimum Weight: %1$s g/m</string>
     <string name="maximum_weight_label">Maximum Weight: %1$s g/m</string>
+    <string name="current_set_point">Current Set Point</string>
+    <string name="weight_change_by_set_change">Weight Change per 5g/m Change: %1$s</string>
     <!-- units of measure -->
     <string name="inches">inches</string>
     <string name="meters_per_minute">m/min</string>

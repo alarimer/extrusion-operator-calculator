@@ -87,6 +87,14 @@ fun SelectionScreen(
                     ) {
                         Text(stringResource(R.string.weatherstrip_calculation))
                     }
+                    Spacer(
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    Button(
+                        onClick = { navController.navigate(WeightChangeEcsScreen) }
+                    ) {
+                        Text(stringResource(R.string.weight_change_ecs))
+                    }
                 }
             }
         } else {
@@ -126,6 +134,14 @@ fun SelectionScreen(
                 onClick = { navController.navigate(WeatherstripTimeScreen) }
             ) {
                 Text(stringResource(R.string.weatherstrip_calculation))
+            }
+            Spacer(
+                modifier = Modifier.padding(4.dp)
+            )
+            Button(
+                onClick = { navController.navigate(WeightChangeEcsScreen) }
+            ) {
+                Text(stringResource(R.string.weight_change_ecs))
             }
         }
         Spacer(

@@ -23,6 +23,7 @@ import com.awful.extrusionoperatorcalculator.ui.SelectionScreen
 import com.awful.extrusionoperatorcalculator.ui.SpeedChangeScreen
 import com.awful.extrusionoperatorcalculator.ui.WeatherstripTimeScreen
 import com.awful.extrusionoperatorcalculator.ui.WeightCalculationScreen
+import com.awful.extrusionoperatorcalculator.ui.WeightChangeEcsScreen
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 
 class MainActivity : ComponentActivity() {
@@ -92,6 +93,13 @@ fun EocApp(
         }
         composable<WeatherstripTimeScreen> {
             WeatherstripTimeScreen(
+                isWideDisplay = isWideDisplay,
+                onBack = { navController.navigateUp() },
+                modifier = modifier
+            )
+        }
+        composable<WeightChangeEcsScreen> {
+            WeightChangeEcsScreen(
                 isWideDisplay = isWideDisplay,
                 onBack = { navController.navigateUp() },
                 modifier = modifier

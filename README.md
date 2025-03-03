@@ -24,13 +24,14 @@ A tool for common Extrusion Operator calculations.
 - Input the `Current Weight`, and the `Standard Weight`.
 - Outputs the `Percent Weight`, the `Minimum Weight`, and the `Maximum Weight`.
 
-#### Weight Adjustment for ECS (TODO)
-- Input the `Set Point`, the `Current Weight`, and the `Current Weight Percentage`.
-- Outputs TBD. (Likely `Set Point for 100%`, `Set Point Change for 1% Weight Change`, `Percentage Increase for each 5 Set Point Change`, ...)
+#### Weight Adjustment for ECS
+- Input the `Set Point`, and the `Current Weight`.
+- Outputs the `Weight Change per 5 g/m Set Point Change`.
+- *Other calculations may be added in the future.*
 
 #### Weight Adjustment for non-ECS (TODO)
-- Input the `Extruder Rate`, the `Current Weight`, and the `Current Weight Percentage`.
-- Outputs TBD (Likely `New Feeder Rate` and the `New Extruder Rate` for 1% Weight Change`.)
+- Input the `Current Feeder Rate`, the `Current Extruder Rate`, and the `Current Weight`.
+- Outputs the `Weight Change per 0.1 Extruder Rate Change`, and the `Feeder Rate Change`.
 
 ### Material Shutoff (TODO)
 *Unlikely since there is no current data readily available for the `In-Tube Compound Weight`.*
