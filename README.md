@@ -19,7 +19,7 @@ A tool for common Extrusion Operator calculations.
 - Input the `Puller Speed`, and the `Spool Length`.
 - Outputs the `Spool Time` in hours and minutes.
 
-### Weight Percentage and Adjustment (TODO)
+### Weight Calculations (PARTIAL)
 #### Weight Calculation
 - Input the `Current Weight`, and the `Standard Weight`.
 - Outputs the `Percent Weight`, the `Minimum Weight`, and the `Maximum Weight`.
