@@ -20,6 +20,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.awful.extrusionoperatorcalculator.BuildConfig
 import com.awful.extrusionoperatorcalculator.R
 import com.awful.extrusionoperatorcalculator.ui.theme.ExtrusionOperatorCalculatorTheme
 import kotlinx.serialization.Serializable
@@ -60,6 +61,8 @@ fun AboutScreen(
             append(" for more information.")
         }
         Text(githubLink)
+        Spacer(modifier = modifier.height(16.dp))
+        Text("Version: " + BuildConfig.VERSION_NAME)
     }
 }
 
