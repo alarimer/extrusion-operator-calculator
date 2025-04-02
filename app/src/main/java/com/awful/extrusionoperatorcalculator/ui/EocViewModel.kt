@@ -236,9 +236,10 @@ class EocViewModel : ViewModel() {
     @SuppressLint("DefaultLocale")
     fun calculateWeightChangeBySetChange() {
         val cSP = currentSetPoint.toInt()
+        val cW = currentWeight.toDouble()
         weightChangeBySetChange = String.format(
             "%.2f",
-            currentWeight.toDouble() * (cSP + 5) / cSP
+            (cW * (cSP + 5) / cSP) - cW
         )
     }
 }
